@@ -1,10 +1,10 @@
-package com.pplbo.ecommerce;
+package com.pplbo.orderservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EcommerceMicroserviceApplicationTests {
+class OrderServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

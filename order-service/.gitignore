@@ -36,9 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 
+# Ignore application properties
+src/main/resources/application.properties
 
-### Payment Service ###
-payment-service/target/
-payment-service/build/
-payment-service/.gradle/
-payment-service/mysql
+# Ignore mysql docker
+mysql
