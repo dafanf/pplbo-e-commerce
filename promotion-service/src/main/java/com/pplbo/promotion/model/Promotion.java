@@ -13,15 +13,10 @@ public class Promotion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type; // e.g., discount, free_shipping, bogo
-
-    private String name; // Previously discountValue
-
+    private String name;
     private LocalDateTime startDate;
-
     private LocalDateTime endDate;
-
-    private String description;
+    private String promotionType;
 
     // Getters and Setters
     public Long getId() {
@@ -30,14 +25,6 @@ public class Promotion {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getName() {
@@ -64,11 +51,11 @@ public class Promotion {
         this.endDate = endDate;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPromotionType() {
+        return promotionType;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPromotionType(String promotionType) {
+        this.promotionType = promotionType;
     }
 }

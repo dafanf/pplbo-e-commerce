@@ -1,9 +1,9 @@
 package com.pplbo.promotion.repository;
 
-import com.pplbo.promotion.model.Promotion;
+import com.pplbo.promotion.model.B1G1Promotion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PromotionRepository extends JpaRepository<Promotion, Long> {
+public interface B1G1PromotionRepository extends JpaRepository<B1G1Promotion, Long> {
 }
