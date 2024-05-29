@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS promotion (
     name VARCHAR(255) NOT NULL,
     start_date DATETIME,
     end_date DATETIME,
-    promotion_type VARCHAR(255) NOT NULL
+    promotion_type VARCHAR(255) NOT NULL,
+    status VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS discount_promotion (
