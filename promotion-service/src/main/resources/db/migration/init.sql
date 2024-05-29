@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS discount_promotion (
     discount_percentage DOUBLE NOT NULL,
     maximum_discount_amount DOUBLE NOT NULL,
     product_id BIGINT,
-    FOREIGN KEY (promotion_id) REFERENCES promotion(id)
+    FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS b1g1_promotion (
@@ -20,5 +20,12 @@ CREATE TABLE IF NOT EXISTS b1g1_promotion (
     promotion_id BIGINT,
     product_id BIGINT,
     free_product_id BIGINT,
-    FOREIGN KEY (promotion_id) REFERENCES promotion(id)
+    FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS shipping_promotion (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    promotion_id BIGINT,
+    minimum_order_price DOUBLE NOT NULL,
+    FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
 );
