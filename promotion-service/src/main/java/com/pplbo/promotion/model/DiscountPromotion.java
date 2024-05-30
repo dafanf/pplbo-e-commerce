@@ -15,6 +15,8 @@ public class DiscountPromotion {
     private double discountPercentage;
     private double maximumDiscountAmount;
     private Long productId;
+    private double discountedPrice;
+    private double originalPrice;
 
     // Getters and Setters
     public Long getId() {
@@ -56,4 +58,39 @@ public class DiscountPromotion {
     public void setProductId(Long productId) {
         this.productId = productId;
     }
+
+    public double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setProductPrice(double originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(double discountedPrice) {
+        this.discountedPrice = discountedPrice;
+    }
+
+    // public void calculateDiscountedPrice() {
+    //     this.discountedPrice = this.originalPrice - (this.originalPrice * this.discountPercentage / 100);
+    //     if (this.discountedPrice > this.maximumDiscountAmount) {
+    //         this.discountedPrice = this.maximumDiscountAmount;
+    //     }
+    // }
+    
+    public void calculateDiscountedPrice() {
+        double discountAmount = this.originalPrice * (this.discountPercentage / 100);
+        
+        // Apply maximum discount amount
+        if (discountAmount > this.maximumDiscountAmount) {
+            discountAmount = this.maximumDiscountAmount;
+        }
+    
+        this.discountedPrice = this.originalPrice - discountAmount;
+    }
+    
 }
