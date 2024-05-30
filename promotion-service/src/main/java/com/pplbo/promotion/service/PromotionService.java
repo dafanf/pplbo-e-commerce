@@ -32,6 +32,7 @@ public class PromotionService {
 
     public DiscountPromotion createDiscountPromotion(DiscountPromotion discountPromotion) {
         validatePromotionTypeForDiscountPromotion(discountPromotion.getPromotion().getId());
+        discountPromotion.calculateDiscountedPrice();
         return discountPromotionRepository.save(discountPromotion);
     }
 

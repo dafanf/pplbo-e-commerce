@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS discount_promotion (
     discount_percentage DOUBLE NOT NULL,
     maximum_discount_amount DOUBLE NOT NULL,
     product_id BIGINT,
+    original_price DOUBLE,
+    discounted_price DOUBLE,
     FOREIGN KEY (promotion_id) REFERENCES promotion(id)
 );
 

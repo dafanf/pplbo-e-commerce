@@ -25,6 +25,7 @@ public class PromotionController {
 
     @PostMapping("/discount")
     public ResponseEntity<DiscountPromotion> createDiscountPromotion(@RequestBody DiscountPromotion discountPromotion) {
+        discountPromotion.calculateDiscountedPrice();
         DiscountPromotion createdDiscountPromotion = promotionService.createDiscountPromotion(discountPromotion);
         return ResponseEntity.ok(createdDiscountPromotion);
     }
