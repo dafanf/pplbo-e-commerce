@@ -16,14 +16,11 @@ COPY src src
 # Berikan izin eksekusi pada skrip gradlew
 RUN chmod +x ./gradlew
 
-# Bangun aplikasi
-RUN ./gradlew build
-
-# Salin file JAR yang dihasilkan oleh proyek Gradle ke dalam container
-COPY build/libs/*.jar app.jar
+# Bersihkan dan bangun aplikasi
+RUN ./gradlew clean build
 
 # Expose port yang digunakan oleh aplikasi
 EXPOSE 8082
 
 # Perintah untuk menjalankan aplikasi saat container dimulai
-CMD ["java", "-jar", "app.jar"]
+CMD ["./gradlew", "bootRun"]

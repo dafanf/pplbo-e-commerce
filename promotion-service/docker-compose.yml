@@ -4,9 +4,32 @@ services:
     image: mysql:8.3.0
     container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD:
+      MYSQL_ROOT_PASSWORD: "771177"
     ports:
-      - "3308:3308"
+      - "3308:3306"
     volumes:
-      - ./mysql:/var/lib/mysql
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  springboot:
+    image: openjdk:17-jdk
+    container_name: springboot-container
+    environment:
+      SPRING_APPLICATION_NAME: promotion
+      SERVER_PORT: 8082
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/promoservice
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 771177
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_H2_CONSOLE_ENABLED: false
+      SPRING_SQL_INIT_MODE: never
+      SPRING_SQL_INIT_SCHEMA_LOCATIONS: classpath:schema.sql
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+    volumes:
+      - ./build/libs/promotion-service-0.0.1-SNAPSHOT.jar:/app.jar
+    command: ["java", "-jar", "/app.jar"]
