@@ -104,6 +104,19 @@ public class PromotionService {
             .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
     }
 
+    public List<DiscountPromotion> getAllDiscountPromotions() {
+        return discountPromotionRepository.findAll();
+    }
+    
+    public List<B1G1Promotion> getAllB1G1Promotions() {
+        return b1g1PromotionRepository.findAll();
+    }
+    
+    public List<ShippingPromotion> getAllShippingPromotions() {
+        return shippingPromotionRepository.findAll();
+    }
+    
+
     public void deletePromotion(Long id) {
         Promotion promotion = promotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));

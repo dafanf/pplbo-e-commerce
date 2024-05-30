@@ -35,4 +35,11 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    public ProductResponse getProductById(Integer id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found for id: " + id));
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId());
+    }
+    
+
 }

@@ -59,6 +59,21 @@ public class PromotionController {
         return ResponseEntity.ok(promotion);
     }
 
+    @GetMapping("/discounts")
+    public List<DiscountPromotion> getAllDiscountPromotions() {
+        return promotionService.getAllDiscountPromotions();
+    }
+
+    @GetMapping("/b1g1")
+    public List<B1G1Promotion> getAllB1G1Promotions() {
+        return promotionService.getAllB1G1Promotions();
+    }
+
+    @GetMapping("/shippings")
+    public List<ShippingPromotion> getAllShippingPromotions() {
+        return promotionService.getAllShippingPromotions();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePromotion(@PathVariable Long id) {
         promotionService.deletePromotion(id);
