@@ -30,9 +30,19 @@ public class PromotionService {
         return promotionRepository.save(promotion);
     }
 
+    // public DiscountPromotion createDiscountPromotion(DiscountPromotion discountPromotion) {
+    //     validatePromotionTypeForDiscountPromotion(discountPromotion.getPromotion().getId());
+    //     discountPromotion.calculateDiscountedPrice();
+    //     return discountPromotionRepository.save(discountPromotion);
+    // }
+
     public DiscountPromotion createDiscountPromotion(DiscountPromotion discountPromotion) {
-        validatePromotionTypeForDiscountPromotion(discountPromotion.getPromotion().getId());
+        Long promotionId = discountPromotion.getPromotion().getId();
+        Promotion promotion = promotionRepository.findById(promotionId)
+                .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
+        discountPromotion.setPromotion(promotion);
         discountPromotion.calculateDiscountedPrice();
+
         return discountPromotionRepository.save(discountPromotion);
     }
 

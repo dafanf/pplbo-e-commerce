@@ -8,7 +8,8 @@ public class DiscountPromotion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    // @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
@@ -74,13 +75,6 @@ public class DiscountPromotion {
     public void setDiscountedPrice(double discountedPrice) {
         this.discountedPrice = discountedPrice;
     }
-
-    // public void calculateDiscountedPrice() {
-    //     this.discountedPrice = this.originalPrice - (this.originalPrice * this.discountPercentage / 100);
-    //     if (this.discountedPrice > this.maximumDiscountAmount) {
-    //         this.discountedPrice = this.maximumDiscountAmount;
-    //     }
-    // }
     
     public void calculateDiscountedPrice() {
         double discountAmount = this.originalPrice * (this.discountPercentage / 100);
