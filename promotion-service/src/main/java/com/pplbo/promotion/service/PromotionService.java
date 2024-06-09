@@ -3,15 +3,18 @@ package com.pplbo.promotion.service;
 import com.pplbo.promotion.model.Promotion;
 import com.pplbo.promotion.model.DiscountPromotion;
 import com.pplbo.promotion.model.B1G1Promotion;
+import com.pplbo.promotion.model.ShippingPromotion;
 import com.pplbo.promotion.repository.PromotionRepository;
 import com.pplbo.promotion.repository.DiscountPromotionRepository;
 import com.pplbo.promotion.repository.B1G1PromotionRepository;
+import com.pplbo.promotion.repository.ShippingPromotionRepository;
 import com.pplbo.promotion.exception.InvalidPromotionTypeException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PromotionService {
@@ -25,23 +28,35 @@ public class PromotionService {
     @Autowired
     private B1G1PromotionRepository b1g1PromotionRepository;
 
+    @Autowired
+    private ShippingPromotionRepository shippingPromotionRepository;
+
     public Promotion createPromotion(Promotion promotion) {
         validatePromotionType(promotion.getPromotionType());
+        promotion.updateStatus();
         return promotionRepository.save(promotion);
     }
 
     public DiscountPromotion createDiscountPromotion(DiscountPromotion discountPromotion) {
         validatePromotionTypeForDiscountPromotion(discountPromotion.getPromotion().getId());
+        discountPromotion.getPromotion().updateStatus();
+        discountPromotion.calculateDiscountedPrice();
         return discountPromotionRepository.save(discountPromotion);
     }
 
     public B1G1Promotion createB1G1Promotion(B1G1Promotion b1g1Promotion) {
         validatePromotionTypeForB1G1Promotion(b1g1Promotion.getPromotion().getId());
+        b1g1Promotion.getPromotion().updateStatus();
         return b1g1PromotionRepository.save(b1g1Promotion);
     }
 
+    public ShippingPromotion createShippingPromotion(ShippingPromotion shippingPromotion) {
+        validatePromotionTypeForShippingPromotion(shippingPromotion.getPromotion().getId());
+        return shippingPromotionRepository.save(shippingPromotion);
+    }
+
     private void validatePromotionType(String promotionType) {
-        if (!promotionType.equalsIgnoreCase("discount") && !promotionType.equalsIgnoreCase("b1g1")) {
+        if (!promotionType.equalsIgnoreCase("discount") && !promotionType.equalsIgnoreCase("b1g1") && !promotionType.equalsIgnoreCase("shipping")) {
             throw new InvalidPromotionTypeException("Invalid promotion type: " + promotionType);
         }
     }
@@ -64,6 +79,15 @@ public class PromotionService {
         }
     }
 
+    private void validatePromotionTypeForShippingPromotion(Long promotionId) {
+        Promotion promotion = promotionRepository.findById(promotionId)
+            .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
+
+        if (!promotion.getPromotionType().equalsIgnoreCase("shipping")) {
+            throw new InvalidPromotionTypeException("Invalid promotion type for shipping promotion");
+        }
+    }
+
     public Promotion updatePromotion(Long id, Promotion promotionDetails) {
         Promotion promotion = promotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
@@ -72,17 +96,22 @@ public class PromotionService {
         promotion.setStartDate(promotionDetails.getStartDate());
         promotion.setEndDate(promotionDetails.getEndDate());
         promotion.setPromotionType(promotionDetails.getPromotionType());
+        promotion.updateStatus();
 
         return promotionRepository.save(promotion);
     }
 
     public List<Promotion> getAllPromotions() {
-        return promotionRepository.findAll();
+        List<Promotion> promotions = promotionRepository.findAll();
+        promotions.forEach(Promotion::updateStatus);
+        return promotions.stream().map(promotionRepository::save).collect(Collectors.toList());
     }
 
     public Promotion getPromotionById(Long id) {
-        return promotionRepository.findById(id)
+        Promotion promotion = promotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
+        promotion.updateStatus();
+        return promotionRepository.save(promotion);
     }
 
     public void deletePromotion(Long id) {
@@ -101,5 +130,11 @@ public class PromotionService {
         B1G1Promotion b1g1Promotion = b1g1PromotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("B1G1Promotion not found for this id :: " + id));
         b1g1PromotionRepository.delete(b1g1Promotion);
+    }
+
+    public void deleteShippingPromotion(Long id) {
+        ShippingPromotion shippingPromotion = shippingPromotionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("ShippingPromotion not found for this id :: " + id));
+        shippingPromotionRepository.delete(shippingPromotion);
     }
 }
