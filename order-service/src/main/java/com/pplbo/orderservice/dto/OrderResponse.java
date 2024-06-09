@@ -9,5 +9,7 @@ public record OrderResponse(
     String orderStatus,
     Double totalPrice,
     List<OrderLineItemResponse> orderLineItems,
-    ShippingResponse shipping
+    ShippingResponse shipping,
+    CustomerResponse customer,
+    Long paymentId
 ) {}
