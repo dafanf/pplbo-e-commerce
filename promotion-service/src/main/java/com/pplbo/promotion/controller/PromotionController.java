@@ -45,10 +45,17 @@ public class PromotionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Promotion> updatePromotion(@PathVariable Long id, @RequestBody Promotion promotionDetails) {
-        Promotion updatedPromotion = promotionService.updatePromotion(id, promotionDetails);
-        return ResponseEntity.ok(updatedPromotion);
+    public ResponseEntity<?> updatePromotion(@PathVariable Long id, @RequestBody Promotion promotionDetails) {
+        try {
+            Promotion updatedPromotion = promotionService.updatePromotion(id, promotionDetails);
+            return ResponseEntity.ok(updatedPromotion);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
+    
 
     @GetMapping
     public List<Promotion> getAllPromotions() {

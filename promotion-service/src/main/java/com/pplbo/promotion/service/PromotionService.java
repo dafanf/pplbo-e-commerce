@@ -97,13 +97,23 @@ public class PromotionService {
     public Promotion updatePromotion(Long id, Promotion promotionDetails) {
         Promotion promotion = promotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
-
-        promotion.setName(promotionDetails.getName());
-        promotion.setStartDate(promotionDetails.getStartDate());
-        promotion.setEndDate(promotionDetails.getEndDate());
-        promotion.setPromotionType(promotionDetails.getPromotionType());
+    
+        boolean updated = false;
+        
+        if (promotionDetails.getStartDate() != null) {
+            promotion.setStartDate(promotionDetails.getStartDate());
+            updated = true;
+        }
+        if (promotionDetails.getEndDate() != null) {
+            promotion.setEndDate(promotionDetails.getEndDate());
+            updated = true;
+        }
+    
+        if (!updated) {
+            throw new IllegalArgumentException("Only startDate and endDate can be updated.");
+        }
+    
         promotion.updateStatus();
-
         return promotionRepository.save(promotion);
     }
 
