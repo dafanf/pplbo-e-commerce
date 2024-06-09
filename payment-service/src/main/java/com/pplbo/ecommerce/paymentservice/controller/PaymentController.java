@@ -1,61 +1,61 @@
 package com.pplbo.ecommerce.paymentservice.controller;
 
-import com.pplbo.ecommerce.paymentservice.dto.PaymentDTO;
-import com.pplbo.ecommerce.paymentservice.model.Payment;
+import com.pplbo.ecommerce.paymentservice.dto.PaymentRequest;
+import com.pplbo.ecommerce.paymentservice.dto.PaymentResponse;
 import com.pplbo.ecommerce.paymentservice.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/payments")
+@RequestMapping("/api/payments")
 public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
 
     @GetMapping
-    public List<PaymentDTO> getAllPayments() {
-        return paymentService.getAllPayments().stream().map(this::convertToDto).collect(Collectors.toList());
+    @ResponseStatus(HttpStatus.OK)
+    public List<PaymentResponse> getAllPayments() {
+        return paymentService.getAllPayments();
     }
 
     @GetMapping("/{id}")
-    public PaymentDTO getPaymentById(@PathVariable Long id) {
-        Payment payment = paymentService.getPaymentById(id);
-        return payment != null ? convertToDto(payment) : null;
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<PaymentResponse> getPaymentById(@PathVariable("id") Long id) {
+        return paymentService.getPaymentById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public PaymentDTO createPayment(@RequestBody PaymentDTO paymentDTO) {
-        Payment payment = paymentService.createPayment(convertToEntity(paymentDTO));
-        return convertToDto(payment);
+    @ResponseStatus(HttpStatus.CREATED)
+    public PaymentResponse createPayment(@RequestBody PaymentRequest paymentRequest) {
+        return paymentService.createPayment(paymentRequest);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<PaymentResponse> updatePayment(@PathVariable("id") Long id,
+            @RequestBody PaymentRequest paymentRequest) {
+        Optional<PaymentResponse> existingPayment = paymentService.getPaymentById(id);
+
+        if (existingPayment.isPresent()) {
+            PaymentResponse updatedPayment = paymentService.updatePayment(id, paymentRequest);
+            return ResponseEntity.ok(updatedPayment);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deletePayment(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deletePayment(@PathVariable("id") Long id) {
         paymentService.deletePayment(id);
-    }
-
-    private PaymentDTO convertToDto(Payment payment) {
-        return new PaymentDTO(
-                payment.getPaymentId(),
-                payment.getOrderId(),
-                payment.getPaymentMethod(),
-                payment.getPaymentDate(),
-                payment.getPaymentStatus(),
-                payment.getPaymentAmount());
-    }
-
-    private Payment convertToEntity(PaymentDTO paymentDTO) {
-        Payment payment = new Payment();
-        payment.setPaymentId(paymentDTO.getPaymentId());
-        payment.setOrderId(paymentDTO.getOrderId());
-        payment.setPaymentMethod(paymentDTO.getPaymentMethod());
-        payment.setPaymentDate(paymentDTO.getPaymentDate());
-        payment.setPaymentStatus(paymentDTO.getPaymentStatus());
-        payment.setPaymentAmount(paymentDTO.getPaymentAmount());
-        return payment;
+        return ResponseEntity.noContent().build();
     }
 }

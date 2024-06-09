@@ -36,6 +36,16 @@ out/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
+=======
+
+### Payment Service ###
+payment-service/target/
+payment-service/build/
+payment-service/.gradle/
+payment-service/mysql
+
+>>>>>>> 49be8eab85111882646fa9e789bcdb15edbd523c
 # Ignore application properties
 src/main/resources/application.properties
 
