@@ -38,9 +38,12 @@ public class PromotionService {
     }
 
     public DiscountPromotion createDiscountPromotion(DiscountPromotion discountPromotion) {
-        validatePromotionTypeForDiscountPromotion(discountPromotion.getPromotion().getId());
-        discountPromotion.getPromotion().updateStatus();
+        Long promotionId = discountPromotion.getPromotion().getId();
+        Promotion promotion = promotionRepository.findById(promotionId)
+                .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
+        discountPromotion.setPromotion(promotion);
         discountPromotion.calculateDiscountedPrice();
+
         return discountPromotionRepository.save(discountPromotion);
     }
 
