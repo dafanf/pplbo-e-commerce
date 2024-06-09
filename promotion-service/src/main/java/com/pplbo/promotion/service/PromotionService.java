@@ -52,7 +52,6 @@ public class PromotionService {
 
     public B1G1Promotion createB1G1Promotion(B1G1Promotion b1g1Promotion) {
         validatePromotionTypeForB1G1Promotion(b1g1Promotion.getPromotion().getId());
-        b1g1Promotion.getPromotion().updateStatus();
         return b1g1PromotionRepository.save(b1g1Promotion);
     }
 
