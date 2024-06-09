@@ -22,6 +22,7 @@ public class Promotion {
 
     @NotBlank(message = "Promotion type is mandatory")
     private String promotionType;
+    private String status; // New status attribute
 
     // Getters and Setters
     public Long getId() {
@@ -62,5 +63,22 @@ public class Promotion {
 
     public void setPromotionType(String promotionType) {
         this.promotionType = promotionType;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void updateStatus() {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(startDate) && now.isBefore(endDate)) {
+            this.status = "active";
+        } else {
+            this.status = "non-active";
+        }
     }
 }

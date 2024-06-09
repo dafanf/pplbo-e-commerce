@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS promotion (
     name VARCHAR(255) NOT NULL,
     start_date DATETIME,
     end_date DATETIME,
-    promotion_type VARCHAR(255) NOT NULL
+    promotion_type VARCHAR(255) NOT NULL,
+    status VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS discount_promotion (
@@ -12,6 +13,8 @@ CREATE TABLE IF NOT EXISTS discount_promotion (
     discount_percentage DOUBLE NOT NULL,
     maximum_discount_amount DOUBLE NOT NULL,
     product_id BIGINT,
+    original_price DOUBLE,
+    discounted_price DOUBLE,
     FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
 );
 
