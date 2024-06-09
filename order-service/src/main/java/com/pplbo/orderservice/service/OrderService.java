@@ -18,16 +18,26 @@ import com.pplbo.orderservice.model.OrderLineItem;
 import com.pplbo.orderservice.model.Shipping;
 import com.pplbo.orderservice.model.Customer;
 import com.pplbo.orderservice.repository.OrderRepository;
-import com.pplbo.orderservice.client.PaymentClient;
+// import com.pplbo.orderservice.client.PaymentClient;
+import com.pplbo.orderservice.event.OrderCreateEvent;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class OrderService {
 
+    private static final String TOPIC = "test-topic";
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+    
     @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
-    private PaymentClient paymentClient;
+    // @Autowired
+    // private PaymentClient paymentClient;
 
     public List<OrderResponse> findAll() {
         return orderRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
@@ -38,13 +48,26 @@ public class OrderService {
     }
 
     public OrderResponse save(OrderRequest orderRequest) {
-        Boolean isPaymentReqExist = paymentClient.isPaymentExist(orderRequest.paymentId());
+        // Boolean isPaymentReqExist = paymentClient.isPaymentExist(orderRequest.paymentId());
 
-        if (isPaymentReqExist) {
-            Order order = convertToEntity(orderRequest);
-            return convertToDto(orderRepository.save(order));
-        } else {
-            throw new RuntimeException("Payment request does not exist");
+        Order order = convertToEntity(orderRequest);
+        return convertToDto(orderRepository.save(order));
+
+        // if (isPaymentReqExist) {
+        //     Order order = convertToEntity(orderRequest);
+        //     return convertToDto(orderRepository.save(order));
+        // } else {
+        //     throw new RuntimeException("Payment request does not exist");
+        // }
+    }
+
+    public void createEventOrder(OrderCreateEvent event) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String message = objectMapper.writeValueAsString(event);
+            kafkaTemplate.send(TOPIC, message);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
