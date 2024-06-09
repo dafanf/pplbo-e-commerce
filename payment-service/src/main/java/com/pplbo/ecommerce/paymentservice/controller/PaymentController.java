@@ -27,6 +27,11 @@ public class PaymentController {
         return payment != null ? convertToDto(payment) : null;
     }
 
+    @GetMapping("/exists")
+    public boolean isPaymentExist(@RequestParam Long id) {
+        return paymentService.isPaymentExist(id);
+    }
+
     @PostMapping
     public PaymentDTO createPayment(@RequestBody PaymentDTO paymentDTO) {
         Payment payment = paymentService.createPayment(convertToEntity(paymentDTO));

@@ -21,6 +21,10 @@ public class PaymentService {
         return paymentRepository.findById(id).orElse(null);
     }
 
+    public boolean isPaymentExist(Long id)
+    {
+        return paymentRepository.existsById(id);
+    }
     // public Payment createPayment(Payment payment) {
     // return paymentRepository.save(payment);
     // }
