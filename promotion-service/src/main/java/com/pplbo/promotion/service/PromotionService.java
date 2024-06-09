@@ -9,6 +9,9 @@ import com.pplbo.promotion.repository.DiscountPromotionRepository;
 import com.pplbo.promotion.repository.B1G1PromotionRepository;
 import com.pplbo.promotion.repository.ShippingPromotionRepository;
 import com.pplbo.promotion.exception.InvalidPromotionTypeException;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,9 +63,10 @@ public class PromotionService {
 
     private void validatePromotionType(String promotionType) {
         if (!promotionType.equalsIgnoreCase("discount") && !promotionType.equalsIgnoreCase("b1g1") && !promotionType.equalsIgnoreCase("shipping")) {
-            throw new InvalidPromotionTypeException("Invalid promotion type: " + promotionType);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid promotion type: " + promotionType);
         }
     }
+    
 
     private void validatePromotionTypeForDiscountPromotion(Long promotionId) {
         Promotion promotion = promotionRepository.findById(promotionId)
