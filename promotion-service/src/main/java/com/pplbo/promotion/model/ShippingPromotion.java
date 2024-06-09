@@ -1,6 +1,7 @@
 package com.pplbo.promotion.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class ShippingPromotion {
@@ -10,8 +11,10 @@ public class ShippingPromotion {
 
     @ManyToOne
     @JoinColumn(name = "promotion_id")
+    @NotNull(message = "Promotion is mandatory")
     private Promotion promotion;
 
+    @NotNull(message = "Minimum order price is mandatory")
     private double minimumOrderPrice;
 
     // Getters and Setters
