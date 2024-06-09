@@ -9,9 +9,6 @@ import com.pplbo.promotion.repository.DiscountPromotionRepository;
 import com.pplbo.promotion.repository.B1G1PromotionRepository;
 import com.pplbo.promotion.repository.ShippingPromotionRepository;
 import com.pplbo.promotion.exception.InvalidPromotionTypeException;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,10 +59,9 @@ public class PromotionService {
 
     private void validatePromotionType(String promotionType) {
         if (!promotionType.equalsIgnoreCase("discount") && !promotionType.equalsIgnoreCase("b1g1") && !promotionType.equalsIgnoreCase("shipping")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid promotion type: " + promotionType);
+            throw new InvalidPromotionTypeException("Invalid promotion type: " + promotionType);
         }
     }
-    
 
     private void validatePromotionTypeForDiscountPromotion(Long promotionId) {
         Promotion promotion = promotionRepository.findById(promotionId)
@@ -97,15 +93,26 @@ public class PromotionService {
     public Promotion updatePromotion(Long id, Promotion promotionDetails) {
         Promotion promotion = promotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
-
-        promotion.setName(promotionDetails.getName());
-        promotion.setStartDate(promotionDetails.getStartDate());
-        promotion.setEndDate(promotionDetails.getEndDate());
-        promotion.setPromotionType(promotionDetails.getPromotionType());
+    
+        boolean updated = false;
+        
+        if (promotionDetails.getStartDate() != null) {
+            promotion.setStartDate(promotionDetails.getStartDate());
+            updated = true;
+        }
+        if (promotionDetails.getEndDate() != null) {
+            promotion.setEndDate(promotionDetails.getEndDate());
+            updated = true;
+        }
+    
+        if (!updated) {
+            throw new IllegalArgumentException("Only startDate and endDate can be updated.");
+        }
+    
         promotion.updateStatus();
-
         return promotionRepository.save(promotion);
     }
+    
 
     public List<Promotion> getAllPromotions() {
         List<Promotion> promotions = promotionRepository.findAll();
@@ -119,22 +126,6 @@ public class PromotionService {
         promotion.updateStatus();
         return promotionRepository.save(promotion);
     }
-
-    public DiscountPromotion getDiscountPromotionById(Long id) {
-        return discountPromotionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("DiscountPromotion not found for id: " + id));
-    }
-
-    public B1G1Promotion getB1G1PromotionById(Long id) {
-        return b1g1PromotionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("B1G1 Promotion not found for id: " + id));
-    }
-    
-    public ShippingPromotion getShippingPromotionById(Long id) {
-        return shippingPromotionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Shipping Promotion not found for id: " + id));
-    }
-    
 
     public void deletePromotion(Long id) {
         Promotion promotion = promotionRepository.findById(id)
