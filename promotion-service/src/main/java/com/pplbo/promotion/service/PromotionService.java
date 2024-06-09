@@ -60,7 +60,7 @@ public class PromotionService {
         return shippingPromotionRepository.save(shippingPromotion);
     }
 
-    private void validatePromotionType(String promotionType) {
+    protected void validatePromotionType(String promotionType) {
         if (!promotionType.equalsIgnoreCase("discount") && !promotionType.equalsIgnoreCase("b1g1") && !promotionType.equalsIgnoreCase("shipping")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid promotion type: " + promotionType);
         }
@@ -158,5 +158,10 @@ public class PromotionService {
         ShippingPromotion shippingPromotion = shippingPromotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("ShippingPromotion not found for this id :: " + id));
         shippingPromotionRepository.delete(shippingPromotion);
+    }
+
+    // Setter method for testing
+    public void setPromotionRepository(PromotionRepository promotionRepository) {
+        this.promotionRepository = promotionRepository;
     }
 }
