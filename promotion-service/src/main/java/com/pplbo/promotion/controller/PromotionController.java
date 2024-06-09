@@ -45,15 +45,9 @@ public class PromotionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePromotion(@PathVariable Long id, @RequestBody Promotion promotionDetails) {
-        try {
-            Promotion updatedPromotion = promotionService.updatePromotion(id, promotionDetails);
-            return ResponseEntity.ok(updatedPromotion);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+    public ResponseEntity<Promotion> updatePromotion(@PathVariable Long id, @RequestBody Promotion promotionDetails) {
+        Promotion updatedPromotion = promotionService.updatePromotion(id, promotionDetails);
+        return ResponseEntity.ok(updatedPromotion);
     }
 
     @GetMapping
@@ -65,6 +59,24 @@ public class PromotionController {
     public ResponseEntity<Promotion> getPromotionById(@PathVariable Long id) {
         Promotion promotion = promotionService.getPromotionById(id);
         return ResponseEntity.ok(promotion);
+    }
+
+    @GetMapping("/discount/{id}")
+    public ResponseEntity<DiscountPromotion> getDiscountPromotionById(@PathVariable Long id) {
+        DiscountPromotion discountPromotion = promotionService.getDiscountPromotionById(id);
+        return ResponseEntity.ok(discountPromotion);
+    }
+
+    @GetMapping("/b1g1/{id}")
+    public ResponseEntity<B1G1Promotion> getB1G1PromotionById(@PathVariable Long id) {
+        B1G1Promotion b1g1Promotion = promotionService.getB1G1PromotionById(id);
+        return ResponseEntity.ok(b1g1Promotion);
+    }
+
+    @GetMapping("/shipping/{id}")
+    public ResponseEntity<ShippingPromotion> getShippingPromotionById(@PathVariable Long id) {
+        ShippingPromotion shippingPromotion = promotionService.getShippingPromotionById(id);
+        return ResponseEntity.ok(shippingPromotion);
     }
 
     @DeleteMapping("/{id}")
