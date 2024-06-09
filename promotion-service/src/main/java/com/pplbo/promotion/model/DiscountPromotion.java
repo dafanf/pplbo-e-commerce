@@ -10,10 +10,16 @@ public class DiscountPromotion {
 
     @ManyToOne
     @JoinColumn(name = "promotion_id")
+    @NotNull(message = "Promotion is mandatory")
     private Promotion promotion;
 
+    @NotNull(message = "Discount percentage is mandatory")
     private double discountPercentage;
+
+    @NotNull(message = "Maximum discount amount is mandatory")
     private double maximumDiscountAmount;
+
+    @NotNull(message = "Product ID is mandatory")
     private Long productId;
 
     // Getters and Setters

@@ -1,10 +1,8 @@
 package com.pplbo.promotion.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,9 +11,16 @@ public class Promotion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is mandatory")
     private String name;
+
+    @NotNull(message = "Start date is mandatory")
     private LocalDateTime startDate;
+
+    @NotNull(message = "End date is mandatory")
     private LocalDateTime endDate;
+
+    @NotBlank(message = "Promotion type is mandatory")
     private String promotionType;
 
     // Getters and Setters
