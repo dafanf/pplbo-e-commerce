@@ -61,6 +61,24 @@ public class PromotionController {
         return ResponseEntity.ok(promotion);
     }
 
+    @GetMapping("/discount/{id}")
+    public ResponseEntity<DiscountPromotion> getDiscountPromotionById(@PathVariable Long id) {
+        DiscountPromotion discountPromotion = promotionService.getDiscountPromotionById(id);
+        return ResponseEntity.ok(discountPromotion);
+    }
+
+    @GetMapping("/b1g1/{id}")
+    public ResponseEntity<B1G1Promotion> getB1G1PromotionById(@PathVariable Long id) {
+        B1G1Promotion b1g1Promotion = promotionService.getB1G1PromotionById(id);
+        return ResponseEntity.ok(b1g1Promotion);
+    }
+
+    @GetMapping("/shipping/{id}")
+    public ResponseEntity<ShippingPromotion> getShippingPromotionById(@PathVariable Long id) {
+        ShippingPromotion shippingPromotion = promotionService.getShippingPromotionById(id);
+        return ResponseEntity.ok(shippingPromotion);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePromotion(@PathVariable Long id) {
         promotionService.deletePromotion(id);

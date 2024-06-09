@@ -120,6 +120,22 @@ public class PromotionService {
         return promotionRepository.save(promotion);
     }
 
+    public DiscountPromotion getDiscountPromotionById(Long id) {
+        return discountPromotionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("DiscountPromotion not found for id: " + id));
+    }
+
+    public B1G1Promotion getB1G1PromotionById(Long id) {
+        return b1g1PromotionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("B1G1 Promotion not found for id: " + id));
+    }
+    
+    public ShippingPromotion getShippingPromotionById(Long id) {
+        return shippingPromotionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Shipping Promotion not found for id: " + id));
+    }
+    
+
     public void deletePromotion(Long id) {
         Promotion promotion = promotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
