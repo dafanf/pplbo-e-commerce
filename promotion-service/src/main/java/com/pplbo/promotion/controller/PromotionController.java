@@ -3,13 +3,14 @@ package com.pplbo.promotion.controller;
 import com.pplbo.promotion.model.Promotion;
 import com.pplbo.promotion.model.DiscountPromotion;
 import com.pplbo.promotion.model.B1G1Promotion;
+import com.pplbo.promotion.model.ShippingPromotion;
 import com.pplbo.promotion.service.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+ 
 @RestController
 @RequestMapping("/api/promotions")
 public class PromotionController {
@@ -25,6 +26,7 @@ public class PromotionController {
 
     @PostMapping("/discount")
     public ResponseEntity<DiscountPromotion> createDiscountPromotion(@RequestBody DiscountPromotion discountPromotion) {
+        discountPromotion.calculateDiscountedPrice();
         DiscountPromotion createdDiscountPromotion = promotionService.createDiscountPromotion(discountPromotion);
         return ResponseEntity.ok(createdDiscountPromotion);
     }
@@ -33,6 +35,12 @@ public class PromotionController {
     public ResponseEntity<B1G1Promotion> createB1G1Promotion(@RequestBody B1G1Promotion b1g1Promotion) {
         B1G1Promotion createdB1G1Promotion = promotionService.createB1G1Promotion(b1g1Promotion);
         return ResponseEntity.ok(createdB1G1Promotion);
+    }
+
+    @PostMapping("/shipping")
+    public ResponseEntity<ShippingPromotion> createShippingPromotion(@RequestBody ShippingPromotion shippingPromotion) {
+        ShippingPromotion createdShippingPromotion = promotionService.createShippingPromotion(shippingPromotion);
+        return ResponseEntity.ok(createdShippingPromotion);
     }
 
     @PutMapping("/{id}")
@@ -67,6 +75,12 @@ public class PromotionController {
     @DeleteMapping("/b1g1/{id}")
     public ResponseEntity<Void> deleteB1G1Promotion(@PathVariable Long id) {
         promotionService.deleteB1G1Promotion(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/shipping/{id}")
+    public ResponseEntity<Void> deleteShippingPromotion(@PathVariable Long id) {
+        promotionService.deleteShippingPromotion(id);
         return ResponseEntity.noContent().build();
     }
 }

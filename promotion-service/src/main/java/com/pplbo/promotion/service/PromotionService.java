@@ -3,9 +3,11 @@ package com.pplbo.promotion.service;
 import com.pplbo.promotion.model.Promotion;
 import com.pplbo.promotion.model.DiscountPromotion;
 import com.pplbo.promotion.model.B1G1Promotion;
+import com.pplbo.promotion.model.ShippingPromotion;
 import com.pplbo.promotion.repository.PromotionRepository;
 import com.pplbo.promotion.repository.DiscountPromotionRepository;
 import com.pplbo.promotion.repository.B1G1PromotionRepository;
+import com.pplbo.promotion.repository.ShippingPromotionRepository;
 import com.pplbo.promotion.exception.InvalidPromotionTypeException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class PromotionService {
     @Autowired
     private B1G1PromotionRepository b1g1PromotionRepository;
 
+    @Autowired
+    private ShippingPromotionRepository shippingPromotionRepository;
+
     public Promotion createPromotion(Promotion promotion) {
         validatePromotionType(promotion.getPromotionType());
         promotion.updateStatus();
@@ -34,6 +39,11 @@ public class PromotionService {
 
     public DiscountPromotion createDiscountPromotion(DiscountPromotion discountPromotion) {
         validatePromotionTypeForDiscountPromotion(discountPromotion.getPromotion().getId());
+<<<<<<< HEAD
+=======
+        discountPromotion.getPromotion().updateStatus();
+        discountPromotion.calculateDiscountedPrice();
+>>>>>>> promotion-service
         return discountPromotionRepository.save(discountPromotion);
     }
 
@@ -42,8 +52,13 @@ public class PromotionService {
         return b1g1PromotionRepository.save(b1g1Promotion);
     }
 
+    public ShippingPromotion createShippingPromotion(ShippingPromotion shippingPromotion) {
+        validatePromotionTypeForShippingPromotion(shippingPromotion.getPromotion().getId());
+        return shippingPromotionRepository.save(shippingPromotion);
+    }
+
     private void validatePromotionType(String promotionType) {
-        if (!promotionType.equalsIgnoreCase("discount") && !promotionType.equalsIgnoreCase("b1g1")) {
+        if (!promotionType.equalsIgnoreCase("discount") && !promotionType.equalsIgnoreCase("b1g1") && !promotionType.equalsIgnoreCase("shipping")) {
             throw new InvalidPromotionTypeException("Invalid promotion type: " + promotionType);
         }
     }
@@ -63,6 +78,15 @@ public class PromotionService {
 
         if (!promotion.getPromotionType().equalsIgnoreCase("b1g1")) {
             throw new InvalidPromotionTypeException("Invalid promotion type for B1G1 promotion");
+        }
+    }
+
+    private void validatePromotionTypeForShippingPromotion(Long promotionId) {
+        Promotion promotion = promotionRepository.findById(promotionId)
+            .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
+
+        if (!promotion.getPromotionType().equalsIgnoreCase("shipping")) {
+            throw new InvalidPromotionTypeException("Invalid promotion type for shipping promotion");
         }
     }
 
@@ -108,5 +132,11 @@ public class PromotionService {
         B1G1Promotion b1g1Promotion = b1g1PromotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("B1G1Promotion not found for this id :: " + id));
         b1g1PromotionRepository.delete(b1g1Promotion);
+    }
+
+    public void deleteShippingPromotion(Long id) {
+        ShippingPromotion shippingPromotion = shippingPromotionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("ShippingPromotion not found for this id :: " + id));
+        shippingPromotionRepository.delete(shippingPromotion);
     }
 }
