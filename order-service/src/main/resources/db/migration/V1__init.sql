@@ -1,11 +1,11 @@
 -- Create the shippings table if it doesn't exist
--- CREATE TABLE IF NOT EXISTS shippings (
---     shipping_id BIGINT AUTO_INCREMENT PRIMARY KEY,
---     shipping_name VARCHAR(255) NOT NULL,
---     shipping_price DOUBLE NOT NULL,
---     shipping_status VARCHAR(255) NOT NULL,
---     shipping_address VARCHAR(255) NOT NULL
--- );
+CREATE TABLE IF NOT EXISTS shippings (
+    shipping_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    shipping_name VARCHAR(255) NOT NULL,
+    shipping_price DOUBLE NOT NULL,
+    shipping_status VARCHAR(255) NOT NULL,
+    shipping_address VARCHAR(255) NOT NULL
+);
 
 -- Create the customers table if it doesn't exist
 CREATE TABLE IF NOT EXISTS customers (

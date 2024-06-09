@@ -81,14 +81,14 @@ public class OrderService {
             .map(item -> new OrderLineItemResponse(item.getOrderLineItemId(), item.getQuantity(), item.getProductId()))
             .collect(Collectors.toList());
 
-        // Shipping shipping = order.getShipping();
-        // ShippingResponse shippingResponse = new ShippingResponse(
-        //     shipping.getShippingId(),
-        //     shipping.getShippingName(),
-        //     shipping.getShippingPrice(),
-        //     shipping.getShippingStatus(),
-        //     shipping.getShippingAddress()
-        // );
+        Shipping shipping = order.getShipping();
+        ShippingResponse shippingResponse = new ShippingResponse(
+            shipping.getShippingId(),
+            shipping.getShippingName(),
+            shipping.getShippingPrice(),
+            shipping.getShippingStatus(),
+            shipping.getShippingAddress()
+        );
 
         Customer customer = order.getCustomer();
         CustomerResponse customerResponse = new CustomerResponse(
@@ -103,7 +103,7 @@ public class OrderService {
             order.getOrderStatus(),
             order.getTotalPrice(),
             orderLineItems,
-            // shippingResponse,
+            shippingResponse,
             customerResponse,
             order.getPaymentId()
         );
@@ -115,14 +115,14 @@ public class OrderService {
             .map(item -> new OrderLineItem(null, item.quantity(), item.productId(), null))
             .collect(Collectors.toList());
     
-        // ShippingRequest shippingRequest = orderRequest.shipping();
-        // Shipping shipping = new Shipping(
-        //     null, //id shipping set null (karna auto increment di DB)
-        //     shippingRequest.shippingName(),
-        //     shippingRequest.shippingPrice(),
-        //     shippingRequest.shippingStatus(),
-        //     shippingRequest.shippingAddress()
-        // );
+        ShippingRequest shippingRequest = orderRequest.shipping();
+        Shipping shipping = new Shipping(
+            null, //id shipping set null (karna auto increment di DB)
+            shippingRequest.shippingName(),
+            shippingRequest.shippingPrice(),
+            shippingRequest.shippingStatus(),
+            shippingRequest.shippingAddress()
+        );
     
         // Buat objek Customer berdasarkan nama pelanggan dari request body
         CustomerRequest customerRequest = orderRequest.customer();
@@ -138,7 +138,7 @@ public class OrderService {
             orderRequest.orderStatus(),
             orderRequest.totalPrice(),
             orderLineItems,
-            // shipping,
+            shipping,
             customer,
             orderRequest.paymentId()
         );

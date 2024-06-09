@@ -29,9 +29,9 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderLineItem> orderLineItems = new ArrayList<>();
 
-    // @OneToOne(cascade = CascadeType.ALL)
-    // @JoinColumn(name = "shipping_id", referencedColumnName = "shippingId")
-    // private Shipping shipping;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shipping_id", referencedColumnName = "shippingId")
+    private Shipping shipping;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", referencedColumnName = "customerId")

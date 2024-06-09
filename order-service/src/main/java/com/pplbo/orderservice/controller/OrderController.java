@@ -38,6 +38,7 @@ public class OrderController {
 
     @PostMapping
     public String createOrder(@RequestBody OrderRequest orderRequest) {
+        
         OrderResponse order = orderService.save(orderRequest);
         OrderCreateEvent event = new OrderCreateEvent(order);
         orderService.createEventOrder(event);
