@@ -1,9 +1,9 @@
-package com.pplbo.orderservice.event;
+package com.pplbo.orderservice.event.domain;
 
 import com.pplbo.orderservice.model.Order;
 import com.pplbo.orderservice.dto.OrderResponse;
 
-public class OrderCreateEvent {
+public class OrderCreateEvent implements Event {
     private OrderResponse order;
 
     public OrderCreateEvent(OrderResponse order) {
