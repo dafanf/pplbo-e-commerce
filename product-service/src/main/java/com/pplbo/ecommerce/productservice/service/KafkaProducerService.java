@@ -5,8 +5,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.pplbo.ecommerce.productservice.event.OrderCreatedEvent;
+import com.pplbo.ecommerce.productservice.event.domain.OrderCreateEvent;
 
 @Service
 public class KafkaProducerService {
@@ -20,7 +19,7 @@ public class KafkaProducerService {
         kafkaTemplate.send(TOPIC, message);
     }
 
-    public void sendUserCreatedEvent(OrderCreatedEvent event) {
+    public void sendUserCreatedEvent(OrderCreateEvent event) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String message = objectMapper.writeValueAsString(event);
