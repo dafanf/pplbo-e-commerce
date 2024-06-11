@@ -33,8 +33,8 @@ tasks.named('test') {
 }
 
 // Konfigurasi Docker Compose
-dockerCompose {
-    useComposeFiles = ['docker-compose.yml'] 
-    startedServices = ['mysql', 'springboot'] 
-    isRequiredBy(tasks.test)
-}
+// dockerCompose {
+//     useComposeFiles = ['docker-compose.yml'] 
+//     startedServices = ['mysql', 'springboot'] 
+//     isRequiredBy(tasks.test)
+// }
