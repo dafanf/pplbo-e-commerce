@@ -1,12 +1,14 @@
 package com.pplbo.promotion.service;
 
+import com.pplbo.promotion.exception.InvalidPromotionTypeException;
 import com.pplbo.promotion.model.ShippingPromotion;
 import com.pplbo.promotion.model.Promotion;
 import com.pplbo.promotion.repository.ShippingPromotionRepository;
 import com.pplbo.promotion.repository.PromotionRepository;
-import com.pplbo.promotion.exception.InvalidPromotionTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ShippingPromotionService {
@@ -25,6 +27,10 @@ public class ShippingPromotionService {
     public ShippingPromotion getShippingPromotionById(Long id) {
         return shippingPromotionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Shipping Promotion not found for id: " + id));
+    }
+
+    public List<ShippingPromotion> getAllShippingPromotions() {
+        return shippingPromotionRepository.findAll();
     }
 
     public void deleteShippingPromotion(Long id) {

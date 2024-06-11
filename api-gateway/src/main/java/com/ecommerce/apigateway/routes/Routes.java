@@ -50,7 +50,7 @@ public class Routes {
                 .route("product_service", r -> r.path("/api/product/**")
                         .filters(f -> {
                             logger.info("Applying filters for product service route");
-                            return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
+                            return f.rewritePath("/api/(?<segment>.*)", "/api/${segment}");
                         })
                         .uri("http://localhost:8083"))
                 .route("cart_service", r -> r.path("/api/cart/**")
