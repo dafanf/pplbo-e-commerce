@@ -83,17 +83,17 @@ public class TransactionService {
 
         // Check if the balance is sufficient
         double balance = Double.parseDouble(userPayment.getBalance());
-        String transactionStatus; 
-        OrderResponse test;
+        String transactionStatus;
+        OrderResponse message;
         if (balance > orderPaymentEvent.getOrder().totalPrice()) {
             transactionStatus = "PESANAN_SELESAI";
             // Update Order status
-            test = orderPaymentEvent.getOrder().withOrderStatus("PESANAN_SELESAI");
+            message = orderPaymentEvent.getOrder().withOrderStatus("PESANAN_SELESAI");
             balance -= orderPaymentEvent.getOrder().totalPrice();
         } else {
             transactionStatus = "PESANAN_DIBATALKAN";
             // Update Order status
-            test = orderPaymentEvent.getOrder().withOrderStatus("PESANAN_DIBATALKAN");
+            message = orderPaymentEvent.getOrder().withOrderStatus("PESANAN_DIBATALKAN");
         }
 
         // Update the UserPayment balance
@@ -111,9 +111,8 @@ public class TransactionService {
 
         transactionRepository.save(transaction);
 
-        System.out.println("INI TEST WOY : " + test);
         // Send the payment event
-        sendOrderPaymentEvent(new OrderPaymentEvent(test));
+        sendOrderPaymentEvent(new OrderPaymentEvent(message));
         // sendOrderPaymentEvent(orderPaymentEvent);
     }
 
