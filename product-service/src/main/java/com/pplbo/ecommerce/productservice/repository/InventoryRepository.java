@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
     Inventory findByProductName(String productName);
+    Inventory findByProductId(Integer productId);
 }

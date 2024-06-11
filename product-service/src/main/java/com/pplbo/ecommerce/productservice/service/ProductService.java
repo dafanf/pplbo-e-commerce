@@ -4,11 +4,14 @@ import com.pplbo.ecommerce.productservice.dto.*;
 import com.pplbo.ecommerce.productservice.model.Brand;
 import com.pplbo.ecommerce.productservice.model.Category;
 import com.pplbo.ecommerce.productservice.model.Product;
+import com.pplbo.ecommerce.productservice.model.Inventory;
 import com.pplbo.ecommerce.productservice.model.ProductCategories;
 import com.pplbo.ecommerce.productservice.repository.BrandRepository;
 import com.pplbo.ecommerce.productservice.repository.CategoryRepository;
 import com.pplbo.ecommerce.productservice.repository.ProductCategoriesRepository;
 import com.pplbo.ecommerce.productservice.repository.ProductRepository;
+import com.pplbo.ecommerce.productservice.service.InventoryService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,7 @@ public class ProductService {
     private final ProductCategoriesRepository productCategoriesRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
+    private final InventoryService inventoryService;
 
     public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = Product.builder()
@@ -34,6 +38,13 @@ public class ProductService {
                 .image(productRequest.image())
                 .build();
         productRepository.save(product);
+        Inventory inventory = Inventory.builder()
+                .productName(product.getName())
+                .productId(product.getId())
+                .quantity(productRequest.stock())
+                .build();
+
+        inventoryService.addInventory(inventory);
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId(), product.getImage());
     }
 

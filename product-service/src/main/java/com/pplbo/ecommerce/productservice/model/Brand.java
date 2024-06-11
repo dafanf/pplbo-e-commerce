@@ -22,4 +22,6 @@ public class Brand {
 
     private String logo;
 
+    private String description;
+
 }
