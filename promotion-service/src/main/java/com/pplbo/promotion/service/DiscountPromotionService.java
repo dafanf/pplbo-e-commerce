@@ -47,15 +47,19 @@ public class DiscountPromotionService {
                 .orElseThrow(() -> new RuntimeException("DiscountPromotion not found for id: " + id));
     }
 
+    public DiscountPromotion getDiscountByProductId(Long id) {
+        return discountPromotionRepository.findByProductId(id);
+    }
+
     public void deleteDiscountPromotion(Long id) {
         DiscountPromotion discountPromotion = discountPromotionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("DiscountPromotion not found for this id :: " + id));
+                .orElseThrow(() -> new RuntimeException("DiscountPromotion not found for this id :: " + id));
         discountPromotionRepository.delete(discountPromotion);
     }
 
     private void validatePromotionTypeForDiscountPromotion(Long promotionId) {
         Promotion promotion = promotionRepository.findById(promotionId)
-            .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
+                .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
 
         if (!promotion.getPromotionType().equalsIgnoreCase("discount")) {
             throw new InvalidPromotionTypeException("Invalid promotion type for discount promotion");

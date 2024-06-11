@@ -5,6 +5,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pplbo.ecommerce.productservice.event.OrderCreatedEvent;
 import com.pplbo.ecommerce.productservice.event.domain.OrderCreateEvent;
 
 @Service
@@ -19,10 +20,10 @@ public class KafkaProducerService {
         kafkaTemplate.send(TOPIC, message);
     }
 
-    public void sendUserCreatedEvent(OrderCreateEvent event) {
+    public void sendUserCreatedEvent(OrderCreatedEvent orderCreatedEvent) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String message = objectMapper.writeValueAsString(event);
+            String message = objectMapper.writeValueAsString(orderCreatedEvent);
             kafkaTemplate.send(TOPIC, message);
         } catch (Exception e) {
             e.printStackTrace();
