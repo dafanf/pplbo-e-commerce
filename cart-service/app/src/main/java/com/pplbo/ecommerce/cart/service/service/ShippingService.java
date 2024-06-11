@@ -5,10 +5,9 @@ import org.springframework.stereotype.Service;
 import com.pplbo.ecommerce.cart.service.dto.ShippingRequest;
 import com.pplbo.ecommerce.cart.service.model.Shipping;
 
-@Service
 public class ShippingService {
-    public Shipping saveShipping(ShippingRequest request) {
-        return Shipping.builder().shippingName(request.shippingName()).shippingPrice(10000)
+    public Shipping saveShipping(ShippingRequest request, Double shippingPrice) {
+        return Shipping.builder().shippingName(request.shippingName()).shippingPrice(shippingPrice)
                 .shippingAddress(request.shippingAddress()).shippingStatus("Pending").build();
     }
 }
