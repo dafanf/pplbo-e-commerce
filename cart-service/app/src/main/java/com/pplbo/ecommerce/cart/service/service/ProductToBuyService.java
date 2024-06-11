@@ -19,8 +19,8 @@ public class ProductToBuyService {
         return productToBuyRepository.findAll();
     }
 
-    public Optional<ProductToBuy> getProductToBuyById(Long id) {
-        return productToBuyRepository.findById(id);
+    public ProductToBuy getProductToBuyById(Long id) {
+        return productToBuyRepository.findById(id).get();
     }
 
     public ProductToBuy saveProductToBuy(ProductToBuy productToBuy) {
