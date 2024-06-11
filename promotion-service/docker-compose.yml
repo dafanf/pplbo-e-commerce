@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: "771177"
+      MYSQL_DATABASE: promoservice
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  springboot:
+    build: .
+    container_name: springboot-container
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/promoservice
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 771177
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql

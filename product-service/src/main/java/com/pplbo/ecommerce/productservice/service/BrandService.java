@@ -18,6 +18,7 @@ public class BrandService {
     public Brand createBrand(BrandRequest brandRequest){
         Brand brand = Brand.builder()
                 .name(brandRequest.name())
+                .logo(brandRequest.logo())
                 .build();
         brandRepository.save(brand);
 
@@ -39,6 +40,7 @@ public class BrandService {
     public Brand updateBrand(int id, BrandRequest brandRequest){
         Brand brand = brandRepository.findById(id);
         brand.setName(brandRequest.name());
+        brand.setLogo(brandRequest.logo());
         brandRepository.save(brand);
 
         return brand;

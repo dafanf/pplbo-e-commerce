@@ -33,5 +33,9 @@ public class Order {
     @JoinColumn(name = "shipping_id", referencedColumnName = "shippingId")
     private Shipping shipping;
 
-    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id", referencedColumnName = "customerId")
+    private Customer customer;
+
+    private Long paymentId;
 }
