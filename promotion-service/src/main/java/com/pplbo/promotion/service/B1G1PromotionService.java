@@ -26,13 +26,15 @@ public class B1G1PromotionService {
     public B1G1Promotion createB1G1Promotion(B1G1Promotion b1g1Promotion) {
         validatePromotionTypeForB1G1Promotion(b1g1Promotion.getPromotion().getId());
 
-        // Check if product and free product exist
-        if (!checkProductExists(b1g1Promotion.getProductId())) {
-            throw new ProductNotFoundException("Product ID not found: " + b1g1Promotion.getProductId());
-        }
-        if (!checkProductExists(b1g1Promotion.getFreeProductId())) {
-            throw new ProductNotFoundException("Free Product ID not found: " + b1g1Promotion.getFreeProductId());
-        }
+        // // Check if product and free product exist
+        // if (!checkProductExists(b1g1Promotion.getProductId())) {
+        // throw new ProductNotFoundException("Product ID not found: " +
+        // b1g1Promotion.getProductId());
+        // }
+        // if (!checkProductExists(b1g1Promotion.getFreeProductId())) {
+        // throw new ProductNotFoundException("Free Product ID not found: " +
+        // b1g1Promotion.getFreeProductId());
+        // }
 
         return b1g1PromotionRepository.save(b1g1Promotion);
     }

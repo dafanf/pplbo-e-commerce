@@ -30,9 +30,10 @@ public class DiscountPromotionService {
         discountPromotion.setPromotion(promotion);
 
         // Check if the product exists
-        if (!checkProductExists(discountPromotion.getProductId())) {
-            throw new ProductNotFoundException("Product ID not found: " + discountPromotion.getProductId());
-        }
+        // if (!checkProductExists(discountPromotion.getProductId())) {
+        // throw new ProductNotFoundException("Product ID not found: " +
+        // discountPromotion.getProductId());
+        // }
 
         discountPromotion.calculateDiscountedPrice();
         return discountPromotionRepository.save(discountPromotion);
