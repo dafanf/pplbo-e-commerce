@@ -19,7 +19,7 @@ public class ProductToBuyService {
         return productToBuyRepository.findAll();
     }
 
-    public ProductToBuy getProductToBuyById(Long id) {
+    public ProductToBuy getProductToBuyById(Integer id) {
         return productToBuyRepository.findById(id).get();
     }
 
@@ -27,7 +27,7 @@ public class ProductToBuyService {
         return productToBuyRepository.save(productToBuy);
     }
 
-    public void deleteProductToBuyById(Long id) {
+    public void deleteProductToBuyById(Integer id) {
         productToBuyRepository.deleteById(id);
     }
 }

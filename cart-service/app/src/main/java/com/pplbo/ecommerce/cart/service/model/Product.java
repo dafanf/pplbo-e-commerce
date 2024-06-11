@@ -29,13 +29,13 @@ import java.util.ArrayList;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String name;
     private Long price;
     private String description;
     private Integer quantity;
     private Integer brandId;
-
+    private String image;
     // Getters and setters
 }
