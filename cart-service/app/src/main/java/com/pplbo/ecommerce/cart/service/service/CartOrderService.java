@@ -43,7 +43,7 @@ public class CartOrderService {
             if (productId == productIdBonus) {
                 lineItems.add(new LineItem(productId, 2));
                 totalPrice += product.getTotalProductPrice() * 2;
-            } else {
+            } else if (productIdBonus != null) {
                 lineItems.add(new LineItem(productId, 1));
                 totalPrice += product.getTotalProductPrice();
                 lineItems.add(new LineItem(productIdBonus, 1));

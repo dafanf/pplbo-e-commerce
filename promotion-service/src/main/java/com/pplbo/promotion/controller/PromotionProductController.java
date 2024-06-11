@@ -15,7 +15,7 @@ public class PromotionProductController {
     @Autowired
     ProductPromotionService productPromotionService;
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public ProductPromoted getProductPromotion(@RequestParam Long productId) {
         return productPromotionService.getProductPromotion(productId);
     }
