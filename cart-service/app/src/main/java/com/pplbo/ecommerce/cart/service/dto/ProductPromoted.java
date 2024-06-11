@@ -1,5 +1,5 @@
 package com.pplbo.ecommerce.cart.service.dto;
 
-public record ProductPromoted(Integer productId, Integer quantity, Long priceTotal) {
+public record ProductPromoted(Long productId, Long priceTotal, Long bonusProductId) {
 
 }

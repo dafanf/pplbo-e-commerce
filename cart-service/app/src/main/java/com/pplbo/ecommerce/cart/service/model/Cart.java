@@ -30,7 +30,6 @@ import java.util.ArrayList;
 @Builder
 public class Cart {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @lombok.NonNull
