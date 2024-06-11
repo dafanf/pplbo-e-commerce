@@ -12,26 +12,22 @@ import com.pplbo.ecommerce.cart.service.repository.ProductToBuyRepository;
 @Service
 public class ProductToBuyService {
 
-    private final ProductToBuyRepository productToBuyRepository;
-
     @Autowired
-    public ProductToBuyService(ProductToBuyRepository productToBuyRepository) {
-        this.productToBuyRepository = productToBuyRepository;
-    }
+    private ProductToBuyRepository productToBuyRepository;
 
     public List<ProductToBuy> getAllProductToBuys() {
         return productToBuyRepository.findAll();
     }
 
-    public Optional<ProductToBuy> getProductToBuyById(Long id) {
-        return productToBuyRepository.findById(id);
+    public ProductToBuy getProductToBuyById(Integer id) {
+        return productToBuyRepository.findById(id).get();
     }
 
     public ProductToBuy saveProductToBuy(ProductToBuy productToBuy) {
         return productToBuyRepository.save(productToBuy);
     }
 
-    public void deleteProductToBuyById(Long id) {
+    public void deleteProductToBuyById(Integer id) {
         productToBuyRepository.deleteById(id);
     }
 }

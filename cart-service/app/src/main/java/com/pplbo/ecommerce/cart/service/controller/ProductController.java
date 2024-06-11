@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
         Optional<Product> productOptional = productService.getProductById(id);
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
@@ -52,13 +52,13 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    public Product updateProduct(@PathVariable Integer id, @RequestBody Product product) {
         return productService.updateProduct(id, product);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable Integer id) {
         productService.deleteProduct(id);
     }
 }

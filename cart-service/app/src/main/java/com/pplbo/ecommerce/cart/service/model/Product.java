@@ -29,17 +29,13 @@ import java.util.ArrayList;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String name;
     private Long price;
     private String description;
     private Integer quantity;
     private Integer brandId;
-
-    @OneToMany(mappedBy = "product")
-    @JsonIgnoreProperties("product") // Ignore the 'product' property when serializing
-    private List<ProductToBuy> productsToBuy = new ArrayList<>();
-
+    private String image;
     // Getters and setters
 }

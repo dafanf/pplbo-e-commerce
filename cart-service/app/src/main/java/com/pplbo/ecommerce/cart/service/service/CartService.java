@@ -21,7 +21,6 @@ import java.util.Optional;
 
 @Service
 public class CartService {
-
     @Autowired
     private CartRepository cartRepository;
 
@@ -29,78 +28,111 @@ public class CartService {
     private ProductService productService;
 
     @Autowired
-    ProductToBuyService productToBuyService;
+    private ProductToBuyService productToBuyService;
 
-    public List<Cart> getAllCarts() {
-        return cartRepository.findAll();
-    }
-
-    public Optional<Cart> getCartById(Long id) {
-        return cartRepository.findById(id);
-    }
-
-    public Cart createCart(CartRequest cartRequest) {
-        Cart cart = Cart.builder().userID(cartRequest.userID()).totalPrice(Long.valueOf(0))
-                .productsToBuy(new ArrayList<>()).build();
-        return cartRepository.save(cart);
-    }
-
-    public void deleteCart(Long id) {
-        cartRepository.deleteById(id);
-    }
-
-    @Transactional
-    public Cart addProductToCart(Long cartId, Long productId, Integer quantityToBuy) {
-        Optional<Cart> optionalCart = cartRepository.findById(cartId);
+    public Cart addProductToCart(Long cartId, Integer productId, Integer quantityToBuy) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new NoSuchElementException("Cart not found with ID: " + cartId));
         Product product = productService.getProductById(productId)
                 .orElseThrow(() -> new NoSuchElementException("Product not found with ID: " + productId));
-        System.out.println(product.getName() + product.getId());
-        Cart cart = optionalCart.orElseThrow(() -> new NoSuchElementException("Cart not found with ID: " + cartId));
 
-        // Check if the product already exists in the cart
         boolean productExistsInCart = false;
         for (ProductToBuy productToBuy : cart.getProductsToBuy()) {
-            if (productToBuy.getProduct().getId().equals(productId)) {
-                // Product already exists, update quantity to buy
+            if (productToBuy.getProductId().equals(productId)) {
                 int newQuantityToBuy = productToBuy.getQuantityToBuy() + quantityToBuy;
                 if (newQuantityToBuy > product.getQuantity()) {
                     throw new IllegalArgumentException(
                             "Not enough quantity available for product: " + product.getName());
                 }
                 productToBuy.setQuantityToBuy(newQuantityToBuy);
+                productToBuy.setTotalProductPrice(newQuantityToBuy * product.getPrice());
                 productExistsInCart = true;
                 break;
             }
         }
 
-        // Product does not exist in the cart, add new ProductToBuy
         if (!productExistsInCart) {
             if (quantityToBuy > product.getQuantity()) {
                 throw new IllegalArgumentException("Not enough quantity available for product: " + product.getName());
             }
 
             ProductToBuy productToBuy = ProductToBuy.builder()
-                    .product(product)
+                    .productId(productId)
                     .cart(cart)
                     .quantityToBuy(quantityToBuy)
+                    .totalProductPrice(quantityToBuy * product.getPrice())
                     .build();
             cart.addProductToBuy(productToBuy);
-            productToBuyService.saveProductToBuy(productToBuy);
         }
+
+        // Update the total price of the cart
+        long totalPrice = 0;
+        for (ProductToBuy productToBuy : cart.getProductsToBuy()) {
+            totalPrice += productToBuy.getTotalProductPrice();
+        }
+        cart.setTotalPrice(totalPrice);
+
         return cartRepository.save(cart);
     }
 
-    public void removeProductFromCart(Long cartId, Long productId) {
+    public List<Cart> getAllCarts() {
+        return cartRepository.findAll();
+    }
+
+    public Cart createCart(CartRequest cartRequest) {
+        Cart cart = Cart.builder()
+                .userID(cartRequest.userID())
+                .totalPrice(0L) // assuming new carts start with a total price of 0
+                .build();
+        return cartRepository.save(cart);
+    }
+
+    public void deleteCart(Long id) {
+        if (cartRepository.existsById(id)) {
+            cartRepository.deleteById(id);
+        } else {
+            throw new NoSuchElementException("Cart not found with ID: " + id);
+        }
+    }
+
+    public Cart removeProductFromCart(Long cartId, Integer productId, Integer quantityToRemove) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NoSuchElementException("Cart not found with ID: " + cartId));
+        Product product = productService.getProductById(productId)
+                .orElseThrow(() -> new NoSuchElementException("Product not found with ID: " + productId));
 
-        boolean removed = cart.getProductsToBuy()
-                .removeIf(productToBuy -> productToBuy.getProduct().getId().equals(productId));
+        boolean productExistsInCart = false;
+        ProductToBuy productToRemove = null;
 
-        if (!removed) {
-            throw new NoSuchElementException("Product not found in cart with ID: " + productId);
+        for (ProductToBuy productToBuy : cart.getProductsToBuy()) {
+            if (productToBuy.getProductId().equals(productId)) {
+                int newQuantityToBuy = productToBuy.getQuantityToBuy() - quantityToRemove;
+                if (newQuantityToBuy <= 0) {
+                    productToRemove = productToBuy; // Mark for removal
+                } else {
+                    productToBuy.setQuantityToBuy(newQuantityToBuy);
+                    productToBuy.setTotalProductPrice(newQuantityToBuy * product.getPrice());
+                }
+                productExistsInCart = true;
+                break;
+            }
         }
 
-        cartRepository.save(cart);
+        if (!productExistsInCart) {
+            throw new NoSuchElementException("Product not found in the cart with ID: " + productId);
+        }
+
+        if (productToRemove != null) {
+            cart.getProductsToBuy().remove(productToRemove);
+        }
+
+        // Update the total price of the cart
+        long totalPrice = 0;
+        for (ProductToBuy productToBuy : cart.getProductsToBuy()) {
+            totalPrice += productToBuy.getTotalProductPrice();
+        }
+        cart.setTotalPrice(totalPrice);
+
+        return cartRepository.save(cart);
     }
 }

@@ -29,22 +29,34 @@ public class Routes {
                             return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
                         })
                         .uri("http://localhost:8081"))
+                .route("order_service", r -> r.path("/api/customer/**")
+                        .filters(f -> {
+                            logger.info("Applying filters for customer service route");
+                            return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
+                        })
+                        .uri("http://localhost:8081"))
+                .route("order_service", r -> r.path("/api/shipping/**")
+                        .filters(f -> {
+                            logger.info("Applying filters for shipping service route");
+                            return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
+                        })
+                        .uri("http://localhost:8081"))
                 .route("promotion_service", r -> r.path("/api/promotions/**")
                         .filters(f -> {
                             logger.info("Applying filters for promotion service route");
-                            return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
+                            return f.rewritePath("/api/(?<segment>.*)", "/api/${segment}");
                         })
                         .uri("http://localhost:8082"))
-                .route("product_service", r -> r.path("/api/products/**")
+                .route("product_service", r -> r.path("/api/product/**")
                         .filters(f -> {
                             logger.info("Applying filters for product service route");
-                            return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
+                            return f.rewritePath("/api/(?<segment>.*)", "/api/${segment}");
                         })
                         .uri("http://localhost:8083"))
                 .route("cart_service", r -> r.path("/api/carts/**")
                         .filters(f -> {
                             logger.info("Applying filters for cart service route");
-                            return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
+                            return f.rewritePath("/api/(?<segment>.*)", "/api/${segment}");
                         })
                         .uri("http://localhost:8084"))
                 .build();

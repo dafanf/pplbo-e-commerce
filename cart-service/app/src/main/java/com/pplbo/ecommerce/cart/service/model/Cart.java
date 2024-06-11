@@ -32,17 +32,24 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @lombok.NonNull
-    private String userID;
 
-    @OneToMany(mappedBy = "cart")
+    @lombok.NonNull
+    private Long userID;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("cart")
     private List<ProductToBuy> productsToBuy = new ArrayList<>();
 
     private Long totalPrice;
 
     // Getters, setters, and other methods
-    public void addProductToBuy(ProductToBuy product) {
-        this.productsToBuy.add(product);
+    public void addProductToBuy(ProductToBuy productToBuy) {
+        this.productsToBuy.add(productToBuy);
+        productToBuy.setCart(this);
+    }
+
+    public void removeProductToBuy(ProductToBuy productToBuy) {
+        this.productsToBuy.remove(productToBuy);
+        productToBuy.setCart(null);
     }
 }

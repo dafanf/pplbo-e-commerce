@@ -25,4 +25,6 @@ public class Product {
 
     private Integer brandId;
 
+    private String image;
+
 }
