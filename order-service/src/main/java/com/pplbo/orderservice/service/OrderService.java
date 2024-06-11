@@ -11,16 +11,33 @@ import com.pplbo.orderservice.dto.OrderLineItemResponse;
 import com.pplbo.orderservice.dto.OrderLineItemRequest;
 import com.pplbo.orderservice.dto.ShippingResponse;
 import com.pplbo.orderservice.dto.ShippingRequest;
+import com.pplbo.orderservice.dto.CustomerResponse;
+import com.pplbo.orderservice.dto.CustomerRequest;
 import com.pplbo.orderservice.model.Order;
 import com.pplbo.orderservice.model.OrderLineItem;
 import com.pplbo.orderservice.model.Shipping;
+import com.pplbo.orderservice.model.Customer;
 import com.pplbo.orderservice.repository.OrderRepository;
+// import com.pplbo.orderservice.client.PaymentClient;
+import com.pplbo.orderservice.event.OrderCreateEvent;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class OrderService {
 
+    private static final String TOPIC = "test-topic";
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+    
     @Autowired
     private OrderRepository orderRepository;
+
+    // @Autowired
+    // private PaymentClient paymentClient;
 
     public List<OrderResponse> findAll() {
         return orderRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
@@ -31,14 +48,34 @@ public class OrderService {
     }
 
     public OrderResponse save(OrderRequest orderRequest) {
+        // Boolean isPaymentReqExist = paymentClient.isPaymentExist(orderRequest.paymentId());
+
         Order order = convertToEntity(orderRequest);
         return convertToDto(orderRepository.save(order));
+
+        // if (isPaymentReqExist) {
+        //     Order order = convertToEntity(orderRequest);
+        //     return convertToDto(orderRepository.save(order));
+        // } else {
+        //     throw new RuntimeException("Payment request does not exist");
+        // }
+    }
+
+    public void createEventOrder(OrderCreateEvent event) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String message = objectMapper.writeValueAsString(event);
+            kafkaTemplate.send(TOPIC, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteById(Long id) {
         orderRepository.deleteById(id);
     }
 
+    //olah Response
     private OrderResponse convertToDto(Order order) {
         List<OrderLineItemResponse> orderLineItems = order.getOrderLineItems().stream()
             .map(item -> new OrderLineItemResponse(item.getOrderLineItemId(), item.getQuantity(), item.getProductId()))
@@ -53,39 +90,59 @@ public class OrderService {
             shipping.getShippingAddress()
         );
 
+        Customer customer = order.getCustomer();
+        CustomerResponse customerResponse = new CustomerResponse(
+            customer.getCustomerId(),
+            customer.getFirstName(),
+            customer.getLastName()
+        );
+
         return new OrderResponse(
             order.getOrderId(),
             order.getOrderDate(),
             order.getOrderStatus(),
             order.getTotalPrice(),
             orderLineItems,
-            shippingResponse
+            shippingResponse,
+            customerResponse,
+            order.getPaymentId()
         );
     }
 
+    //olah Request
     private Order convertToEntity(OrderRequest orderRequest) {
         List<OrderLineItem> orderLineItems = orderRequest.orderLineItems().stream()
             .map(item -> new OrderLineItem(null, item.quantity(), item.productId(), null))
             .collect(Collectors.toList());
-
+    
         ShippingRequest shippingRequest = orderRequest.shipping();
         Shipping shipping = new Shipping(
-            null,
+            null, //id shipping set null (karna auto increment di DB)
             shippingRequest.shippingName(),
             shippingRequest.shippingPrice(),
             shippingRequest.shippingStatus(),
             shippingRequest.shippingAddress()
         );
-
+    
+        // Buat objek Customer berdasarkan nama pelanggan dari request body
+        CustomerRequest customerRequest = orderRequest.customer();
+        Customer customer = new Customer(
+            null, //id customer set null (karna auto increment di DB)
+            customerRequest.firstName(),
+            customerRequest.lastName()
+        );
+    
         Order order = new Order(
-            null,
+            null, //id order set null (karna auto increment di DB)
             orderRequest.orderDate(),
             orderRequest.orderStatus(),
             orderRequest.totalPrice(),
             orderLineItems,
-            shipping
+            shipping,
+            customer,
+            orderRequest.paymentId()
         );
-
+    
         orderLineItems.forEach(item -> item.setOrder(order));
         return order;
     }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products/brand")
+@RequestMapping("/api/product/brand")
 @RequiredArgsConstructor
 public class BrandController {
 
@@ -27,9 +27,9 @@ public class BrandController {
         return brandService.getBrandById(id);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeBrand(@RequestBody Integer id){
+    public void removeBrand(@PathVariable("id") Integer id){
         brandService.removeBrand(id);
     }
 
@@ -39,7 +39,7 @@ public class BrandController {
         return brandService.updateBrand(id, brandRequest);
     }
 
-    @GetMapping("/allbrand")
+    @GetMapping("/all")
     public List<Brand> getAllBrands(){
         return brandService.getAllBrands();
     }

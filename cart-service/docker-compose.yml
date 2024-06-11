@@ -1,25 +1,31 @@
 version: '3.8'
 services:
-  postgres:
-    image: postgres:latest
+  mysql:
+    image: mysql:8.3.0
+    restart: always
     environment:
-      POSTGRES_DB: your_database_name
-      POSTGRES_USER: your_database_username
-      POSTGRES_PASSWORD: your_database_password
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+      MYSQL_DATABASE: colle # Specify the name of the database you want to create
     ports:
-      - "5434:5432"
+      - "5434:3306"
+    volumes:
+      - db_data:/var/lib/mysql
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: cart_db
-      POSTGRES_USER: cart_admim
-      POSTGRES_PASSWORD: cart_password
+      MYSQL_HOST : localhost
+      MYSQL_PORT : 3306
+      MYSQL_DB : cart
+      MYSQL_USER : root
+      MYSQL_PASSWORD : 
     ports:
       - "8084:8080"
     depends_on:
-      - postgres
+      - mysql
+volumes:
+  db_data:
+    driver: local
