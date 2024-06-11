@@ -34,7 +34,7 @@ public class Cart {
     private Long id;
 
     @lombok.NonNull
-    private String userID;
+    private Long userID;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("cart")

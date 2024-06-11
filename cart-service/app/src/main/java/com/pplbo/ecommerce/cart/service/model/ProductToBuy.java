@@ -26,14 +26,14 @@ import lombok.NoArgsConstructor;
 public class ProductToBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
     @JsonIgnoreProperties("productsToBuy")
     private Cart cart;
 
-    private Long productId;
+    private Integer productId;
     private Integer quantityToBuy;
     private Long totalProductPrice;
     // Getters and setters

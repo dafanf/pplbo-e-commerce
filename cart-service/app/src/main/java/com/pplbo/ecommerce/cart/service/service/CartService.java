@@ -30,7 +30,7 @@ public class CartService {
     @Autowired
     private ProductToBuyService productToBuyService;
 
-    public Cart addProductToCart(Long cartId, Long productId, Integer quantityToBuy) {
+    public Cart addProductToCart(Long cartId, Integer productId, Integer quantityToBuy) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NoSuchElementException("Cart not found with ID: " + cartId));
         Product product = productService.getProductById(productId)
@@ -95,7 +95,7 @@ public class CartService {
         }
     }
 
-    public Cart removeProductFromCart(Long cartId, Long productId, Integer quantityToRemove) {
+    public Cart removeProductFromCart(Long cartId, Integer productId, Integer quantityToRemove) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NoSuchElementException("Cart not found with ID: " + cartId));
         Product product = productService.getProductById(productId)
