@@ -81,10 +81,15 @@ public class CartService {
 
     public Cart createCart(CartRequest cartRequest) {
         Cart cart = Cart.builder()
-                .userID(cartRequest.userID())
+                .id(cartRequest.customerID())
+                .userID(cartRequest.customerID())
                 .totalPrice(0L) // assuming new carts start with a total price of 0
                 .build();
         return cartRepository.save(cart);
+    }
+
+    public Cart getCartById(Long id) {
+        return cartRepository.findById(id).get();
     }
 
     public void deleteCart(Long id) {

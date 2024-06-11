@@ -61,10 +61,6 @@ public class CartController {
         return cartService.createCart(cart);
     }
 
-    // @PostMapping
-    // @ResponseStatus(HttpStatus.CREATED)
-    // public String createOrder(@RequestBody )
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCart(@PathVariable Long id) {
