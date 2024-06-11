@@ -48,13 +48,18 @@ public class B1G1PromotionService {
 
     public void deleteB1G1Promotion(Long id) {
         B1G1Promotion b1g1Promotion = b1g1PromotionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("B1G1Promotion not found for this id :: " + id));
+                .orElseThrow(() -> new RuntimeException("B1G1Promotion not found for this id :: " + id));
         b1g1PromotionRepository.delete(b1g1Promotion);
+    }
+
+    public B1G1Promotion getPromotionByProductId(Long id) {
+        return b1g1PromotionRepository.findByProductId(id.longValue());
+
     }
 
     private void validatePromotionTypeForB1G1Promotion(Long promotionId) {
         Promotion promotion = promotionRepository.findById(promotionId)
-            .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
+                .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
 
         if (!promotion.getPromotionType().equalsIgnoreCase("b1g1")) {
             throw new InvalidPromotionTypeException("Invalid promotion type for B1G1 promotion");

@@ -1,7 +1,6 @@
 package com.pplbo.ecommerce.productservice.event.domain;
 
 import com.pplbo.ecommerce.productservice.dto.OrderResponse;
-import com.pplbo.ecommerce.productservice.model.User;
 
 import lombok.NoArgsConstructor;
 

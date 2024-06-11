@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pplbo.ecommerce.productservice.event.OrderCreatedEvent;
+import com.pplbo.ecommerce.productservice.event.domain.OrderCreateEvent;
 import com.pplbo.ecommerce.productservice.dto.dtoorder.OrderLineItemResponse;
 import com.pplbo.ecommerce.productservice.service.InventoryService;
 import com.pplbo.ecommerce.productservice.service.KafkaProducerService;
@@ -40,7 +41,7 @@ public class ConsumerServicee {
         String orderStatus = event.getOrder().orderStatus();
         OrderResponse updatedOrder;
 
-        //Default order status is Success
+        // Default order status is Success
         updatedOrder = event.getOrder().withOrderStatus("Success");
 
         // Check if order is in processing state
@@ -51,7 +52,7 @@ public class ConsumerServicee {
                     break;
                 }
             }
-            //Cek stok, jika stok cukup maka order berhasil dan stok berkurang
+            // Cek stok, jika stok cukup maka order berhasil dan stok berkurang
             if (instock) {
                 for (OrderLineItemResponse orderLineItem : orderLineItems) {
                     inventoryService.decreaseInventory(orderLineItem.productId(), orderLineItem.quantity());
@@ -60,7 +61,7 @@ public class ConsumerServicee {
             } else {
                 updatedOrder = event.getOrder().withOrderStatus("Failed");
             }
-        }else if (orderStatus.equals("Failed")) { //Jika order gagal, maka stok dikembalikan
+        } else if (orderStatus.equals("Failed")) { // Jika order gagal, maka stok dikembalikan
             for (OrderLineItemResponse orderLineItem : orderLineItems) {
                 Inventory existInventory = inventoryService.getInventoryByProductId(orderLineItem.productId());
                 inventoryService.recoverInventory(existInventory, orderLineItem.quantity());
@@ -68,7 +69,7 @@ public class ConsumerServicee {
             updatedOrder = event.getOrder().withOrderStatus("Failed");
         }
 
-        //Publish event 
+        // Publish event
         kafkaProducerService.sendUserCreatedEvent(new OrderCreatedEvent(updatedOrder));
     }
 }
