@@ -17,23 +17,25 @@ public class PromotionService {
     private PromotionRepository promotionRepository;
 
     public Promotion createPromotion(Promotion promotion) {
+        System.out.println("create");
         validatePromotionType(promotion.getPromotionType());
         promotion.updateStatus();
         return promotionRepository.save(promotion);
     }
 
     protected void validatePromotionType(String promotionType) {
-        if (!promotionType.equalsIgnoreCase("discount") && !promotionType.equalsIgnoreCase("b1g1") && !promotionType.equalsIgnoreCase("shipping")) {
+        if (!promotionType.equalsIgnoreCase("discount") && !promotionType.equalsIgnoreCase("b1g1")
+                && !promotionType.equalsIgnoreCase("shipping")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid promotion type: " + promotionType);
         }
     }
 
     public Promotion updatePromotion(Long id, Promotion promotionDetails) {
         Promotion promotion = promotionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
-    
+                .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
+
         boolean updated = false;
-        
+
         if (promotionDetails.getStartDate() != null) {
             promotion.setStartDate(promotionDetails.getStartDate());
             updated = true;
@@ -42,11 +44,11 @@ public class PromotionService {
             promotion.setEndDate(promotionDetails.getEndDate());
             updated = true;
         }
-    
+
         if (!updated) {
             throw new IllegalArgumentException("Only startDate and endDate can be updated.");
         }
-    
+
         promotion.updateStatus();
         return promotionRepository.save(promotion);
     }
@@ -59,14 +61,14 @@ public class PromotionService {
 
     public Promotion getPromotionById(Long id) {
         Promotion promotion = promotionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
+                .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
         promotion.updateStatus();
         return promotionRepository.save(promotion);
     }
 
     public void deletePromotion(Long id) {
         Promotion promotion = promotionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
+                .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
         promotionRepository.delete(promotion);
     }
 
