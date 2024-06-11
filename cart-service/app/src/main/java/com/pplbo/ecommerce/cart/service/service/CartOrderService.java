@@ -23,6 +23,8 @@ public class CartOrderService {
     @Autowired
     CartService cartService;
 
+    ShippingService shippingService = new ShippingService();
+
     private RestTemplate restTemplate = new RestTemplate();
 
     private final String PROMOTION_API_URL = "http://localhost:8085/api/promotions/";
@@ -51,9 +53,7 @@ public class CartOrderService {
         double shippingDiscount = 0.10;
         Double shippingPrice = 10000 * shippingDiscount;
         return CartOrder.builder().customerId(customerId).orderStatus("PENDING")
-                .shipping(
-                        new Shipping(shipping.shippingName(), shippingPrice, "PENDING", shipping.shippingAddress()))
-                .orderDate(new Date())
+                .shipping(shippingService.saveShipping(shipping, shippingPrice))
                 .lineItems(lineItems).build();
     }
 }
