@@ -11,7 +11,7 @@ import com.pplbo.ecommerce.productservice.event.OrderCreatedEvent;
 @Service
 public class KafkaProducerService {
 
-    private static final String TOPIC = "OrderProductEvent";
+    private static final String TOPIC = "orderReplyEvent";
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;

@@ -85,7 +85,7 @@ public class ConsumerService {
                 Inventory existInventory = inventoryService.getInventoryByProductId(orderLineItem.productId());
                 inventoryService.recoverInventory(existInventory, orderLineItem.quantity());
             }
-            producerService.sendOrderReplyEvent(new OrderEvent(event.getOrder()));
+            // producerService.sendOrderReplyEvent(new OrderEvent(event.getOrder()));
         }
     }
 }

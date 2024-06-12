@@ -23,7 +23,7 @@ public class ConsumerServicee {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topics = "OrderCreateEvent", groupId = "group_id")
+    @KafkaListener(topics = "productRequestEvent", groupId = "group_id")
     public void consumeOrderEvent(String message) {
         try {
             OrderCreatedEvent event = objectMapper.readValue(message, OrderCreatedEvent.class);
@@ -41,10 +41,10 @@ public class ConsumerServicee {
         OrderResponse updatedOrder;
 
         //Default order status is Success
-        updatedOrder = event.getOrder().withOrderStatus("Success");
+        updatedOrder = event.getOrder().withOrderStatus("PESANAN_DIBUAT");
 
         // Check if order is in processing state
-        if (orderStatus.equals("Processing")) {
+        if (orderStatus.equals("PESANAN_TERTUNDA")) {
             for (OrderLineItemResponse orderLineItem : orderLineItems) {
                 if (!inventoryService.checkStok(orderLineItem.productId(), orderLineItem.quantity())) {
                     instock = false;
@@ -56,16 +56,16 @@ public class ConsumerServicee {
                 for (OrderLineItemResponse orderLineItem : orderLineItems) {
                     inventoryService.decreaseInventory(orderLineItem.productId(), orderLineItem.quantity());
                 }
-                updatedOrder = event.getOrder().withOrderStatus("Success");
+                updatedOrder = event.getOrder().withOrderStatus("PESANAN_DIBUAT");
             } else {
-                updatedOrder = event.getOrder().withOrderStatus("Failed");
+                updatedOrder = event.getOrder().withOrderStatus("PESANAN_DIBATALKAN");
             }
-        }else if (orderStatus.equals("Failed")) { //Jika order gagal, maka stok dikembalikan
+        }else if (orderStatus.equals("PESANAN_DIBATALKAN")) { //Jika order gagal, maka stok dikembalikan
             for (OrderLineItemResponse orderLineItem : orderLineItems) {
                 Inventory existInventory = inventoryService.getInventoryByProductId(orderLineItem.productId());
                 inventoryService.recoverInventory(existInventory, orderLineItem.quantity());
             }
-            updatedOrder = event.getOrder().withOrderStatus("Failed");
+            updatedOrder = event.getOrder().withOrderStatus("PESANAN_DIBATALKAN");
         }
 
         //Publish event 

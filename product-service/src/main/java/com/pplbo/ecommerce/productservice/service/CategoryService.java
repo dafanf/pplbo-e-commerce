@@ -21,16 +21,17 @@ public class CategoryService {
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
         Category category = Category.builder()
             .categoryName(categoryRequest.categoryName())
+            .categoryDescription(categoryRequest.categoryDescription())
             .build();
         categoryRepository.save(category);
-        return new CategoryResponse(category.getCategoryId(), category.getCategoryName());
+        return new CategoryResponse(category.getCategoryId(), category.getCategoryName(), category.getCategoryDescription());
     }
 
     //Get all categories
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll()
         .stream()
-        .map(category -> new CategoryResponse(category.getCategoryId(), category.getCategoryName()))
+        .map(category -> new CategoryResponse(category.getCategoryId(), category.getCategoryName(), category.getCategoryDescription()))
         .collect(Collectors.toList());
     }
 
@@ -43,6 +44,6 @@ public class CategoryService {
     //get category by id
     public CategoryResponse getCategoryById(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId).orElse(null);
-        return new CategoryResponse(category.getCategoryId(), category.getCategoryName());
+        return new CategoryResponse(category.getCategoryId(), category.getCategoryName(), category.getCategoryDescription());
     }
 }

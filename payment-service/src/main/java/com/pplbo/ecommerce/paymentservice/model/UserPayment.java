@@ -13,18 +13,16 @@ import lombok.Builder;
 import java.util.Date;
 
 @Entity
-@Table(name = "payment")
+@Table(name = "user_payment")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Payment {
+public class UserPayment {
     @Id
     private Long paymentId;
-    private Long orderId;
+    private Long userId; // Assuming userId is a part of the payment details
     private String paymentMethod;
-    private Date paymentDate;
-    private String paymentStatus;
-    private Double paymentAmount;
+    private String balance;
 }

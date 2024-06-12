@@ -31,6 +31,8 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.13'
     implementation 'org.yaml:snakeyaml:1.6'
     implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'

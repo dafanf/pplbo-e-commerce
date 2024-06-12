@@ -22,4 +22,7 @@ public class Category {
 
     @Column(name = "name", nullable = false)
     private String categoryName;
+
+    @Column(name = "description", nullable = false)
+    private String categoryDescription;
 }
