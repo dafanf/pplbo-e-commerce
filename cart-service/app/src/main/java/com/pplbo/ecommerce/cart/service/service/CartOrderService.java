@@ -28,6 +28,7 @@ public class CartOrderService {
     private RestTemplate restTemplate = new RestTemplate();
 
     private final String PROMOTION_API_URL = "http://localhost:8085/api/promotions/";
+    private final String ORDER_API_URL = "http://localhost:8085/api/orders";
 
     public CartOrder createOrder(Long customerId, ShippingRequest shipping) {
         Cart cart = cartService.getCartById(customerId);
@@ -42,7 +43,7 @@ public class CartOrderService {
             Long productIdBonus = productPromoted.getBody().bonusProductId();
             if (productId == productIdBonus) {
                 lineItems.add(new LineItem(productId, 2));
-                totalPrice += product.getTotalProductPrice() * 2;
+                totalPrice += productPromoted.getBody().priceTotal() * 2;
             } else if (productIdBonus != null) {
                 lineItems.add(new LineItem(productId, 1));
                 totalPrice += product.getTotalProductPrice();
@@ -51,9 +52,20 @@ public class CartOrderService {
         }
         // TODO fetch shipping promotion
         double shippingDiscount = 0.10;
-        Double shippingPrice = 10000 * shippingDiscount;
-        return CartOrder.builder().customerId(customerId).orderStatus("PENDING")
-                .shipping(shippingService.saveShipping(shipping, shippingPrice))
-                .lineItems(lineItems).build();
+        Boolean isShippingFree = true;
+        Double shippingCost = isShippingFree ? 0.0 : 10000.0;
+        Long paymentId = (long) 1;
+        CartOrder order = CartOrder.builder().customerId(customerId)
+                .orderStatus("PESANAN TERTUNDA")
+                .shipping(shippingService.saveShipping(shipping, shippingCost))
+                .lineItems(lineItems)
+                .totalPrice(totalPrice)
+                .orderDate(new Date())
+                .paymentId(paymentId)
+                .build();
+        ResponseEntity<CartOrder> orderCreated = restTemplate.postForEntity(
+                ORDER_API_URL, order,
+                CartOrder.class);
+        return orderCreated.getBody();
     }
 }
