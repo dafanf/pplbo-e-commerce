@@ -3,12 +3,14 @@ package com.pplbo.promotion.service;
 import com.pplbo.promotion.exception.InvalidPromotionTypeException;
 import com.pplbo.promotion.exception.ProductNotFoundException;
 import com.pplbo.promotion.model.DiscountPromotion;
+import com.pplbo.promotion.dto.Product;
 import com.pplbo.promotion.model.Promotion;
 import com.pplbo.promotion.repository.DiscountPromotionRepository;
 import com.pplbo.promotion.repository.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import java.util.List;
 
 @Service
@@ -21,7 +23,7 @@ public class DiscountPromotionService {
     private DiscountPromotionRepository discountPromotionRepository;
 
     @Autowired
-    private RestTemplate restTemplate; // Inject RestTemplate
+    private RestTemplate restTemplate;
 
     public DiscountPromotion createDiscountPromotion(DiscountPromotion discountPromotion) {
         Long promotionId = discountPromotion.getPromotion().getId();
@@ -29,10 +31,14 @@ public class DiscountPromotionService {
                 .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
         discountPromotion.setPromotion(promotion);
 
-        // Check if the product exists
-        if (!checkProductExists(discountPromotion.getProductId())) {
+        // Fetch product details
+        Product product = fetchProductDetails(discountPromotion.getProductId());
+        if (product == null) {
             throw new ProductNotFoundException("Product ID not found: " + discountPromotion.getProductId());
         }
+
+        // Set the original price from product price
+        discountPromotion.setOriginalPrice(product.getPrice());
 
         discountPromotion.calculateDiscountedPrice();
         return discountPromotionRepository.save(discountPromotion);
@@ -69,6 +75,15 @@ public class DiscountPromotionService {
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    private Product fetchProductDetails(Long productId) {
+        try {
+            String url = "http://localhost:8085/api/product/" + productId;
+            return restTemplate.getForObject(url, Product.class);
+        } catch (Exception e) {
+            return null;
         }
     }
 }

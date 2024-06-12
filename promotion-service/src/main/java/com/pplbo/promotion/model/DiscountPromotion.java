@@ -24,7 +24,6 @@ public class DiscountPromotion {
     @NotNull(message = "Product ID is mandatory")
     private Long productId;
 
-    @NotNull(message = "Original price is mandatory")
     private double originalPrice;
 
     private double discountedPrice;
@@ -74,9 +73,9 @@ public class DiscountPromotion {
         return originalPrice;
     }
 
-    public void setProductPrice(double originalPrice) {
+    public void setOriginalPrice(double originalPrice) {
         this.originalPrice = originalPrice;
-    }
+    }    
 
     public double getDiscountedPrice() {
         return discountedPrice;
