@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pplbo.promotion.dto.ProductPromoted;
@@ -15,8 +16,8 @@ public class PromotionProductController {
     @Autowired
     ProductPromotionService productPromotionService;
 
-    @GetMapping("/product/{id}")
-    public ProductPromoted getProductPromotion(@RequestParam Long productId) {
+    @GetMapping("/products/{productId}")
+    public ProductPromoted getProductPromotion(@PathVariable Long productId) {
         return productPromotionService.getProductPromotion(productId);
     }
 

@@ -21,7 +21,7 @@ import com.pplbo.ecommerce.cart.service.model.Product;
 import com.pplbo.ecommerce.cart.service.service.ProductService;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/carts/products")
 public class ProductController {
 
     @Autowired

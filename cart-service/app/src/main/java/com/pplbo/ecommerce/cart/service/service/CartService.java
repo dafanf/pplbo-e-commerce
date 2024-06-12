@@ -40,10 +40,10 @@ public class CartService {
         for (ProductToBuy productToBuy : cart.getProductsToBuy()) {
             if (productToBuy.getProductId().equals(productId)) {
                 int newQuantityToBuy = productToBuy.getQuantityToBuy() + quantityToBuy;
-                if (newQuantityToBuy > product.getQuantity()) {
-                    throw new IllegalArgumentException(
-                            "Not enough quantity available for product: " + product.getName());
-                }
+                // if (newQuantityToBuy > product.getQuantity()) {
+                // throw new IllegalArgumentException(
+                // "Not enough quantity available for product: " + product.getName());
+                // }
                 productToBuy.setQuantityToBuy(newQuantityToBuy);
                 productToBuy.setTotalProductPrice(newQuantityToBuy * product.getPrice());
                 productExistsInCart = true;
@@ -52,9 +52,10 @@ public class CartService {
         }
 
         if (!productExistsInCart) {
-            if (quantityToBuy > product.getQuantity()) {
-                throw new IllegalArgumentException("Not enough quantity available for product: " + product.getName());
-            }
+            // if (quantityToBuy > product.getQuantity()) {
+            // throw new IllegalArgumentException("Not enough quantity available for
+            // product: " + product.getName());
+            // }
 
             ProductToBuy productToBuy = ProductToBuy.builder()
                     .productId(productId)
