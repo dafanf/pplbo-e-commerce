@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/promotions/shipping")
@@ -25,6 +26,12 @@ public class ShippingPromotionController {
     public ResponseEntity<ShippingPromotion> getShippingPromotionById(@PathVariable Long id) {
         ShippingPromotion shippingPromotion = promotionService.getShippingPromotionById(id);
         return ResponseEntity.ok(shippingPromotion);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ShippingPromotion>> getAllShippingPromotions() {
+        List<ShippingPromotion> shippingPromotions = promotionService.getAllShippingPromotions();
+        return ResponseEntity.ok(shippingPromotions);
     }
 
     @DeleteMapping("/{id}")
