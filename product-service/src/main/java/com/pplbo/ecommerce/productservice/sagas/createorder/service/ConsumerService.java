@@ -66,7 +66,7 @@ public class ConsumerService {
                 }
                 updatedOrder = event.getOrder().withOrderStatus("PESANAN_DIBUAT");
             } else {
-                updatedOrder = event.getOrder().withOrderStatus("PESANAN_DIBATALKAN");
+                updatedOrder = event.getOrder().withOrderStatus("PESANAN_GAGAL");
             }
 
             producerService.sendOrderReplyEvent(new OrderEvent(updatedOrder));

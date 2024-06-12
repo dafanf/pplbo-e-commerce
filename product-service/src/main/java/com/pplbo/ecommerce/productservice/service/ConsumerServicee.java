@@ -23,7 +23,7 @@ public class ConsumerServicee {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topics = "productRequestEvent", groupId = "group_id")
+    // @KafkaListener(topics = "productRequestEvent", groupId = "group_id")
     public void consumeOrderEvent(String message) {
         try {
             OrderCreatedEvent event = objectMapper.readValue(message, OrderCreatedEvent.class);
@@ -58,7 +58,7 @@ public class ConsumerServicee {
                 }
                 updatedOrder = event.getOrder().withOrderStatus("PESANAN_DIBUAT");
             } else {
-                updatedOrder = event.getOrder().withOrderStatus("PESANAN_DIBATALKAN");
+                updatedOrder = event.getOrder().withOrderStatus("PESANAN_GAGAL");
             }
         }else if (orderStatus.equals("PESANAN_DIBATALKAN")) { //Jika order gagal, maka stok dikembalikan
             for (OrderLineItemResponse orderLineItem : orderLineItems) {

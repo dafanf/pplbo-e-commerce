@@ -81,10 +81,14 @@ public class OrderService {
 
     // @KafkaListener(topics = "orderReply", groupId = "group_id")
     public void handleReply(OrderCreateEvent event) {
+        Order order = orderRepository.findById(event.getOrder().orderId()).orElseThrow(() -> new RuntimeException("Order not found"));
+            order.setOrderStatus(event.getOrder().orderStatus());
+
         if(event.getOrder().orderStatus().equals("PESANAN_DIBUAT")){
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String message = objectMapper.writeValueAsString(event);
+                
                 kafkaTemplate.send(PAYMENT_REQUEST_TOPIC, message);      
             } catch (Exception e) {
                 e.printStackTrace();
@@ -93,7 +97,7 @@ public class OrderService {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String message = objectMapper.writeValueAsString(event);
-                System.out.println("CAPEK : " + message); 
+                orderRepository.save(order);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -101,13 +105,13 @@ public class OrderService {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String message = objectMapper.writeValueAsString(event);
-                System.out.println("HAYO : " + message); 
+                orderRepository.save(order);
                 kafkaTemplate.send(COMPENSATE_PRODUCT, message);    
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("TEST HALO ADA GA : " + event.getOrder());        
+        
     }
 
     public void deleteById(Long id) {
