@@ -71,9 +71,40 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public ProductResponse getProductById(Integer id){
+    public ProductDetailResponse getProductById(Integer id){
         Product product = productRepository.findById(id).orElse(null);
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId(), product.getImage());
+
+        Brand brand = brandRepository.findById(product.getBrandId()).orElse(null);
+        String brandName = brand != null ? brand.getName() : "Unknown";
+
+        // Fetch ProductCategories
+        List<ProductCategories> productCategories = productCategoriesRepository.findByProductId(product.getId());
+
+        // Extract category IDs
+        List<Integer> categoryIds = productCategories.stream()
+                .map(ProductCategories::getCategoryId)
+                .collect(Collectors.toList());
+
+        // Fetch Categories
+        List<Category> categories = categoryRepository.findByCategoryIdIn(categoryIds);
+
+        // Extract category names
+        List<String> categoryNames = categories.stream()
+                .map(Category::getCategoryName)
+                .collect(Collectors.toList());
+
+        Inventory inventory = inventoryService.getInventoryByProductId(product.getId());
+
+        return new ProductDetailResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getDescription(),
+                brandName,
+                product.getImage(),
+                categoryNames,
+                inventory.getQuantity()
+        );
     }
 
     public ProductCategoriesResponse addCategoryToProduct(Integer id, ProductCategoriesRequest productCategoryRequest){
@@ -156,6 +187,8 @@ public class ProductService {
                     .map(Category::getCategoryName)
                     .collect(Collectors.toList());
 
+            Inventory inventory = inventoryService.getInventoryByProductId(product.getId());
+
             ProductDetailResponse productDetailResponse = new ProductDetailResponse(
                     product.getId(),
                     product.getName(),
@@ -163,7 +196,8 @@ public class ProductService {
                     product.getDescription(),
                     brandName,
                     product.getImage(),
-                    categoryNames
+                    categoryNames,
+                    inventory.getQuantity()
             );
 
             productDetailResponses.add(productDetailResponse);
