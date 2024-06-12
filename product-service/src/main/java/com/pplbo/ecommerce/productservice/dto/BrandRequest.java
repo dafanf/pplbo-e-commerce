@@ -1,4 +1,4 @@
 package com.pplbo.ecommerce.productservice.dto;
 
-public record BrandRequest(String name, String logo) {
+public record BrandRequest(String name, String logo, String description) {
 }

@@ -1,6 +1,7 @@
 package com.pplbo.promotion.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class B1G1Promotion {
@@ -10,9 +11,13 @@ public class B1G1Promotion {
 
     @ManyToOne
     @JoinColumn(name = "promotion_id")
+    @NotNull(message = "Promotion is mandatory")
     private Promotion promotion;
 
+    @NotNull(message = "Product ID is mandatory")
     private Long productId;
+
+    @NotNull(message = "Free Product ID is mandatory")
     private Long freeProductId;
 
     // Getters and Setters

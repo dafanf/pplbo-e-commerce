@@ -32,15 +32,15 @@ public class InventoryController {
         return inventoryService.getInventoryByProductName(productName);
     }
 
-    @PutMapping("/decrease-stock/{productName}")
-    public Inventory decreaseInventory(@PathVariable("productName") String productName, @RequestParam Integer decreasequantity){
-        return inventoryService.decreaseInventory(productName, decreasequantity);
-    }
+    // @PutMapping("/decrease-stock/{productName}")
+    // public Inventory decreaseInventory(@PathVariable("productName") String productName, @RequestParam Integer decreasequantity){
+    //     return inventoryService.decreaseInventory(productName, decreasequantity);
+    // }
 
-    @GetMapping("/check-stock/{productName}")
-    public Boolean checkStok(@PathVariable("productName") String productName){
-        return inventoryService.checkStok(productName);
-    }
+    // @GetMapping("/check-stock/{productName}")
+    // public Boolean checkStok(@PathVariable("productName") String productName){
+    //     return inventoryService.checkStok(productName);
+    // }
 
     @PutMapping("/recover/{productName}")
     public Inventory recoverInventory(@PathVariable("productName") String productName, @RequestParam Integer recoverquantity){

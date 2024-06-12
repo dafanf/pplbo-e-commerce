@@ -19,15 +19,15 @@ public class ProductToBuyService {
         return productToBuyRepository.findAll();
     }
 
-    public Optional<ProductToBuy> getProductToBuyById(Long id) {
-        return productToBuyRepository.findById(id);
+    public ProductToBuy getProductToBuyById(Integer id) {
+        return productToBuyRepository.findById(id).get();
     }
 
     public ProductToBuy saveProductToBuy(ProductToBuy productToBuy) {
         return productToBuyRepository.save(productToBuy);
     }
 
-    public void deleteProductToBuyById(Long id) {
+    public void deleteProductToBuyById(Integer id) {
         productToBuyRepository.deleteById(id);
     }
 }

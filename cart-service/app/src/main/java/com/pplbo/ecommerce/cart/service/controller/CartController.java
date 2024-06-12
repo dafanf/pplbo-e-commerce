@@ -45,7 +45,7 @@ public class CartController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
         Optional<Product> productOptional = productService.getProductById(id);
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
@@ -68,13 +68,13 @@ public class CartController {
     }
 
     @PostMapping("/{cartId}/products/{productId}")
-    public Cart addProductToCart(@PathVariable Long cartId, @PathVariable Long productId,
+    public Cart addProductToCart(@PathVariable Long cartId, @PathVariable Integer productId,
             @RequestParam Integer quantity) {
         return cartService.addProductToCart(cartId, productId, quantity);
     }
 
     @DeleteMapping("/{cartId}/products/{productId}")
-    public Cart removeProductFromCart(@PathVariable Long cartId, @PathVariable Long productId,
+    public Cart removeProductFromCart(@PathVariable Long cartId, @PathVariable Integer productId,
             @RequestParam Integer quantity) {
         Cart cart = cartService.removeProductFromCart(cartId, productId, quantity);
         return cart;

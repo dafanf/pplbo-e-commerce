@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DiscountPromotionRepository extends JpaRepository<DiscountPromotion, Long> {
+    DiscountPromotion findByProductId(Long productId);
 }

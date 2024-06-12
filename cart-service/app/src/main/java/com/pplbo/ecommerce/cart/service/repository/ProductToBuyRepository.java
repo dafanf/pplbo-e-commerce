@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.pplbo.ecommerce.cart.service.model.ProductToBuy;
 
 @Repository
-public interface ProductToBuyRepository extends JpaRepository<ProductToBuy, Long> {
+public interface ProductToBuyRepository extends JpaRepository<ProductToBuy, Integer> {
 }

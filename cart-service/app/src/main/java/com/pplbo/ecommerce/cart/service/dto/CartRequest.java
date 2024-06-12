@@ -4,5 +4,5 @@ import java.util.List;
 
 import com.pplbo.ecommerce.cart.service.model.Product;
 
-public record CartRequest(String userID) {
+public record CartRequest(Long customerID) {
 }

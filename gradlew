@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 #
 # Copyright © 2015-2021 the original authors.
 #
@@ -115,6 +116,9 @@ esac
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
 
+# Print Java home directory
+echo "JAVA_HOME: $JAVA_HOME"
+
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then
     if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
@@ -139,6 +143,9 @@ Please set the JAVA_HOME variable in your environment to match the
 location of your Java installation."
     fi
 fi
+
+# Debugging statements
+
 
 # Increase the maximum file descriptors if we can.
 if ! "$cygwin" && ! "$darwin" && ! "$nonstop" ; then

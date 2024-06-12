@@ -37,18 +37,22 @@ public class InventoryService {
         return inventoryRepository.findByProductName(productName);
     }
 
+    public Inventory getInventoryByProductId(Integer productId) {
+        return inventoryRepository.findByProductId(productId);
+    }
+
     //decrease inventory
-    public Inventory decreaseInventory(String productName, Integer quantity) {
-        Inventory inventory = inventoryRepository.findByProductName(productName);
+    public Inventory decreaseInventory(Integer productId, Integer quantity) {
+        Inventory inventory = inventoryRepository.findByProductId(productId);
         inventory.setQuantity(inventory.getQuantity() - quantity);
         inventoryRepository.save(inventory);
         return inventory;
     }
 
     //check stok
-    public Boolean checkStok(String productName) {
-        Inventory inventory = inventoryRepository.findByProductName(productName);
-        return inventory.getQuantity() > 0;
+    public Boolean checkStok(Integer productId, Integer quantity) {
+        Inventory inventory = inventoryRepository.findByProductId(productId);
+        return inventory.getQuantity() >= quantity;
     }
 
     //recover inventory

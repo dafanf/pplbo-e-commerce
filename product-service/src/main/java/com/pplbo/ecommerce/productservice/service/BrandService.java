@@ -19,6 +19,7 @@ public class BrandService {
         Brand brand = Brand.builder()
                 .name(brandRequest.name())
                 .logo(brandRequest.logo())
+                .description(brandRequest.description())
                 .build();
         brandRepository.save(brand);
 

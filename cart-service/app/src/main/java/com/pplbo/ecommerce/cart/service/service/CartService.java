@@ -30,7 +30,7 @@ public class CartService {
     @Autowired
     private ProductToBuyService productToBuyService;
 
-    public Cart addProductToCart(Long cartId, Long productId, Integer quantityToBuy) {
+    public Cart addProductToCart(Long cartId, Integer productId, Integer quantityToBuy) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NoSuchElementException("Cart not found with ID: " + cartId));
         Product product = productService.getProductById(productId)
@@ -40,10 +40,10 @@ public class CartService {
         for (ProductToBuy productToBuy : cart.getProductsToBuy()) {
             if (productToBuy.getProductId().equals(productId)) {
                 int newQuantityToBuy = productToBuy.getQuantityToBuy() + quantityToBuy;
-                if (newQuantityToBuy > product.getQuantity()) {
-                    throw new IllegalArgumentException(
-                            "Not enough quantity available for product: " + product.getName());
-                }
+                // if (newQuantityToBuy > product.getQuantity()) {
+                // throw new IllegalArgumentException(
+                // "Not enough quantity available for product: " + product.getName());
+                // }
                 productToBuy.setQuantityToBuy(newQuantityToBuy);
                 productToBuy.setTotalProductPrice(newQuantityToBuy * product.getPrice());
                 productExistsInCart = true;
@@ -52,9 +52,10 @@ public class CartService {
         }
 
         if (!productExistsInCart) {
-            if (quantityToBuy > product.getQuantity()) {
-                throw new IllegalArgumentException("Not enough quantity available for product: " + product.getName());
-            }
+            // if (quantityToBuy > product.getQuantity()) {
+            // throw new IllegalArgumentException("Not enough quantity available for
+            // product: " + product.getName());
+            // }
 
             ProductToBuy productToBuy = ProductToBuy.builder()
                     .productId(productId)
@@ -81,10 +82,15 @@ public class CartService {
 
     public Cart createCart(CartRequest cartRequest) {
         Cart cart = Cart.builder()
-                .userID(cartRequest.userID())
+                .id(cartRequest.customerID())
+                .userID(cartRequest.customerID())
                 .totalPrice(0L) // assuming new carts start with a total price of 0
                 .build();
         return cartRepository.save(cart);
+    }
+
+    public Cart getCartById(Long id) {
+        return cartRepository.findById(id).get();
     }
 
     public void deleteCart(Long id) {
@@ -95,7 +101,7 @@ public class CartService {
         }
     }
 
-    public Cart removeProductFromCart(Long cartId, Long productId, Integer quantityToRemove) {
+    public Cart removeProductFromCart(Long cartId, Integer productId, Integer quantityToRemove) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NoSuchElementException("Cart not found with ID: " + cartId));
         Product product = productService.getProductById(productId)
