@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import com.pplbo.promotion.event.PromotionEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 @Service
 public class PromotionService {
@@ -16,10 +18,15 @@ public class PromotionService {
     @Autowired
     private PromotionRepository promotionRepository;
 
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+
     public Promotion createPromotion(Promotion promotion) {
         validatePromotionType(promotion.getPromotionType());
         promotion.updateStatus();
-        return promotionRepository.save(promotion);
+        Promotion createdPromotion = promotionRepository.save(promotion);
+        sendEvent(createdPromotion, "create");
+        return createdPromotion;
     }
 
     protected void validatePromotionType(String promotionType) {
@@ -48,7 +55,9 @@ public class PromotionService {
         }
     
         promotion.updateStatus();
-        return promotionRepository.save(promotion);
+        Promotion updatedPromotion = promotionRepository.save(promotion);
+        sendEvent(updatedPromotion, "update");
+        return updatedPromotion;
     }
 
     public List<Promotion> getAllPromotions() {
@@ -67,7 +76,19 @@ public class PromotionService {
     public void deletePromotion(Long id) {
         Promotion promotion = promotionRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Promotion not found for this id :: " + id));
-        promotionRepository.delete(promotion);
+            promotionRepository.delete(promotion);
+            sendEvent(promotion, "delete");
+    }
+
+    private void sendEvent(Promotion promotion, String action) {
+        PromotionEvent event = new PromotionEvent();
+        event.setId(promotion.getId());
+        event.setName(promotion.getName());
+        event.setType(promotion.getPromotionType());
+        event.setStatus(promotion.getStatus());
+        event.setAction(action);
+        event.setTimestamp(LocalDateTime.now());
+        kafkaProducerService.sendEvent(event);
     }
 
     // Setter method for testing

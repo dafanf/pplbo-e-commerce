@@ -28,6 +28,9 @@ dependencies {
 	// runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
+    implementation 'org.springframework.kafka:spring-kafka:3.2.0'
 }
 
 tasks.named('test') {
