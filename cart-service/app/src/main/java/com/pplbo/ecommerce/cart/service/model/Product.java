@@ -1,34 +1,39 @@
 package com.pplbo.ecommerce.cart.service.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.util.List;
+import java.util.ArrayList;
+
+@Entity
+@Table(name = "product")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Product {
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
 
     private Long price;
 
-    public Integer getId() {
-        return id;
-    }
+    private String description;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private Integer quantityToBuy;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
-
+    private Integer brandId;
+    // Define the many-to-many relationship with carts
+    @ManyToMany(mappedBy = "products")
+    private List<Cart> carts = new ArrayList<>();
 }

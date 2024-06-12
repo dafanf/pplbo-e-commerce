@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:your_database_name}
-    username: ${POSTGRES_USER:your_database_username}
-    password: ${POSTGRES_PASSWORD:your_database_password}
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:your_database_name}?useSSL=false&serverTimezone=UTC
+    username: ${MYSQL_USER:your_database_username}
+    password: ${MYSQL_PASSWORD:your_database_password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
