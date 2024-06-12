@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
+import com.pplbo.promotion.event.PromotionEvent;
+import java.time.LocalDateTime;
 
 @Service
 public class B1G1PromotionService {
@@ -23,10 +25,12 @@ public class B1G1PromotionService {
     @Autowired
     private RestTemplate restTemplate; // Inject RestTemplate
 
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+
     public B1G1Promotion createB1G1Promotion(B1G1Promotion b1g1Promotion) {
         validatePromotionTypeForB1G1Promotion(b1g1Promotion.getPromotion().getId());
 
-        // Check if product and free product exist
         if (!checkProductExists(b1g1Promotion.getProductId())) {
             throw new ProductNotFoundException("Product ID not found: " + b1g1Promotion.getProductId());
         }
@@ -34,7 +38,26 @@ public class B1G1PromotionService {
             throw new ProductNotFoundException("Free Product ID not found: " + b1g1Promotion.getFreeProductId());
         }
 
-        return b1g1PromotionRepository.save(b1g1Promotion);
+        B1G1Promotion savedPromotion = b1g1PromotionRepository.save(b1g1Promotion);
+
+        // Publish event
+        PromotionEvent event = createPromotionEvent(savedPromotion, "b1g1");
+        kafkaProducerService.sendEvent(event);
+
+        return savedPromotion;
+    }
+
+    private PromotionEvent createPromotionEvent(B1G1Promotion promotion, String action) {
+        PromotionEvent event = new PromotionEvent();
+        event.setId(promotion.getId());
+        event.setName(promotion.getPromotion().getName());
+        event.setType(promotion.getPromotion().getPromotionType());
+        event.setStatus(promotion.getPromotion().getStatus());
+        event.setAction(action);
+        event.setTimestamp(LocalDateTime.now());
+        // Include Free Product ID in the event
+        event.setFreeProductId(promotion.getFreeProductId());
+        return event;
     }
 
     public B1G1Promotion getB1G1PromotionById(Long id) {
