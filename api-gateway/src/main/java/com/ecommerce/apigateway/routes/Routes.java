@@ -26,7 +26,7 @@ public class Routes {
                 .route("order_service", r -> r.path("/api/orders/**")
                         .filters(f -> {
                             logger.info("Applying filters for order service route");
-                            return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
+                            return f.rewritePath("/api/(?<segment>.*)", "/api/${segment}");
                         })
                         .uri("http://localhost:8081"))
                 .route("order_service", r -> r.path("/api/customer/**")
@@ -44,7 +44,7 @@ public class Routes {
                 .route("promotion_service", r -> r.path("/api/promotions/**")
                         .filters(f -> {
                             logger.info("Applying filters for promotion service route");
-                            return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
+                            return f.rewritePath("/api/(?<segment>.*)", "/api/${segment}");
                         })
                         .uri("http://localhost:8082"))
                 .route("product_service", r -> r.path("/api/product/**")

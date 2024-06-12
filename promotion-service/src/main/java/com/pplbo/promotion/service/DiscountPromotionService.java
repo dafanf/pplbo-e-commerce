@@ -26,6 +26,7 @@ public class DiscountPromotionService {
     private RestTemplate restTemplate;
 
     public DiscountPromotion createDiscountPromotion(DiscountPromotion discountPromotion) {
+        validatePromotionTypeForDiscountPromotion(discountPromotion.getPromotion().getId());
         Long promotionId = discountPromotion.getPromotion().getId();
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new RuntimeException("Promotion not found for id: " + promotionId));
